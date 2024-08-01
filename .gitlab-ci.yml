@@ -1,0 +1,29 @@
+image: node:lts-slim
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run test:ci
+    - npm run lint
+    - npm run format
+    - mkdir -p dist
+    - npx tsx src/main.ts "$(cat calendars.json)" > dist/calendar.ics
+  artifacts:
+    paths:
+      - dist
+  coverage: '/All files[^\|]*\|[^\|]*\s+([\d\.]+)/'
+
+pages:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - cp -r dist public
+  artifacts:
+    paths:
+      - public
