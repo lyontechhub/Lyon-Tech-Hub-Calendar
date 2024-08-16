@@ -1,6 +1,7 @@
 import { Name } from './Name';
 
 export type CalendarEventBuilder = {
+  id: string;
   title: Name;
   group: Name;
   start: Date;
@@ -10,6 +11,7 @@ export type CalendarEventBuilder = {
 };
 
 export class CalendarEvent {
+  readonly id: string;
   readonly #title: Name;
   readonly #group: Name;
   readonly start: Date;
@@ -20,6 +22,7 @@ export class CalendarEvent {
   private constructor(builder: CalendarEventBuilder) {
     this.#title = builder.title;
     this.#group = builder.group;
+    this.id = builder.id;
     this.start = builder.start;
     this.end = builder.end;
     this.description = builder.description;
