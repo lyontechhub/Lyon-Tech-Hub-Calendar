@@ -7,6 +7,7 @@ export const toCalendarEvent =
   (group: string) =>
   (vEvent: VEvent): CalendarEvent =>
     CalendarEvent.of({
+      id: `${group}-${vEvent.uid}`,
       title: Name.of(vEvent.summary),
       description: vEvent.description,
       group: Name.of(group),

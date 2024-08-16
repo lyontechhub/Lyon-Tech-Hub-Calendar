@@ -24,6 +24,7 @@ END:VEVENT
     const calendarEvent = toCalendarEvent('minimal')(vEvent);
 
     expect(calendarEvent.fullTitle.get).toBe('[minimal] Title');
+    expect(calendarEvent.id).toBe('minimal-901AC34F-5C83-4ACC-8619-95C9CE39DF95');
     expect(calendarEvent.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
     expect(calendarEvent.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
     expect(calendarEvent.address).toBeUndefined();
@@ -46,6 +47,7 @@ END:VEVENT
     const calendarEvent = toCalendarEvent('full')(vEvent);
 
     expect(calendarEvent.fullTitle.get).toBe('[full] Title');
+    expect(calendarEvent.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95');
     expect(calendarEvent.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
     expect(calendarEvent.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
     expect(calendarEvent.description).toEqual(
