@@ -1,12 +1,12 @@
 import { Calendar } from '../domain/Calendar';
 import { CalendarRepository } from '../domain/CalendarRepository';
 
-import { toCalendarEvent } from './IcsCalendarEvent';
+import { toCalendarEvents } from './IcsCalendarEvent';
 import { parse } from './IcsParser';
 
 const icalToCalendarEvent = (group: string, text: string): Calendar => {
   const calendarEvents = parse(text, new Date());
-  return calendarEvents.map(toCalendarEvent(group));
+  return calendarEvents.flatMap(toCalendarEvents(group));
 };
 
 const fetchToGroupText = ([group, ics]: [string, string]) =>
