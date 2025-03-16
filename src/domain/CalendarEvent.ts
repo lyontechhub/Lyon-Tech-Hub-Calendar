@@ -8,7 +8,13 @@ export type CalendarEventBuilder = {
   description?: string;
   end: Date;
   address?: string;
+  geo?: Geo;
+  url?: string;
 };
+export type Geo = {
+  lat: number
+  lon: number
+}
 
 export class CalendarEvent {
   readonly id: string;
@@ -18,6 +24,8 @@ export class CalendarEvent {
   readonly end: Date;
   readonly description?: string;
   readonly address?: string;
+  readonly geo?: Geo;
+  readonly url?: string;
 
   private constructor(builder: CalendarEventBuilder) {
     this.#title = builder.title;
@@ -27,6 +35,8 @@ export class CalendarEvent {
     this.end = builder.end;
     this.description = builder.description;
     this.address = builder.address;
+    this.geo = builder.geo;
+    this.url = builder.url;
   }
 
   get fullTitle(): Name {
