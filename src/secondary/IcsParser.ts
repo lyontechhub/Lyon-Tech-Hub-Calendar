@@ -4,10 +4,13 @@ import { VEvent } from 'node-ical';
 type SingleEvent = {
   type: string
   id: string
-  title: string
-  description: string
   start: Date
   end: Date
+  data: EventData
+}
+type EventData = {
+  title: string
+  description: string
   url: String | null
   location: string | null
   geo: Geo | null
@@ -38,13 +41,15 @@ const parseEvent = (event: VEvent): SingleEvent[] => {
   return [{
     type: 'single',
     id: event.uid,
-    title: event.summary,
-    description: event.description,
     start: event.start,
     end: event.end,
-    url: formatUrl(event),
-    location: event.location || null,
-    geo: formatGeo(event),
+    data: {
+      title: event.summary,
+      description: event.description,
+      url: formatUrl(event),
+      location: event.location || null,
+      geo: formatGeo(event),
+    },
   }]
 }
 
