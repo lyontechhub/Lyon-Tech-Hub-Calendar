@@ -44,7 +44,7 @@ END:DAYLIGHT
 END:VTIMEZONE
 END:VCALENDAR`
 
-    const calendarEvent = parse(content);
+    const calendarEvent = parse(content, now);
 
     expect(calendarEvent).toStrictEqual([
       {
@@ -78,7 +78,7 @@ ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2018/11
 CATEGORIES:Réunion
 END:VEVENT`
 
-    const calendarEvent = parse(content);
+    const calendarEvent = parse(content, now);
 
     expect(calendarEvent).toStrictEqual([
       {
@@ -113,7 +113,7 @@ LAST-MODIFIED:20250311T175449Z
 CLASS:PUBLIC
 END:VEVENT`
 
-    const calendarEvent = parse(content);
+    const calendarEvent = parse(content, now);
 
     expect(calendarEvent).toStrictEqual([
       {
@@ -141,7 +141,7 @@ END:VEVENT`
   it('extract events of meetup', () => {
     const content = getSample('meetup')
 
-    const calendarEvent = parse(content);
+    const calendarEvent = parse(content, now);
 
     expect(calendarEvent).toStrictEqual([
       {
@@ -174,7 +174,7 @@ END:VEVENT`
   it('extract events of wordpress', () => {
     const content = getSample('wordpress')
 
-    const calendarEvent = parse(content);
+    const calendarEvent = parse(content, now);
 
     expect(calendarEvent).toStrictEqual([
       {
