@@ -3,37 +3,37 @@ import { VEvent } from 'node-ical';
 import * as dateFns from 'date-fns';
 import { getTimezoneOffset } from 'date-fns-tz';
 
-type Event = RecurrentEvent | SingleEvent
-type RecurrentEvent = {
+export type Event = RecurrentEvent | SingleEvent
+export type RecurrentEvent = {
   type: 'recurrent'
   id: string
   dates: Interval[]
   data: EventData
 }
-type Interval = IntervalDateTime | IntervalDateOnly
-type IntervalDateTime = {
+export type Interval = IntervalDateTime | IntervalDateOnly
+export type IntervalDateTime = {
   start: Date
   end: Date
 }
-type IntervalDateOnly = {
+export type IntervalDateOnly = {
   start: DateOnly
   end: DateOnly
 }
-type DateOnly = { year: number; month: number; day: number }
-type SingleEvent = {
+export type DateOnly = { year: number; month: number; day: number }
+export type SingleEvent = {
   type: 'single'
   id: string
   date: Interval
   data: EventData
 }
-type EventData = {
+export type EventData = {
   title: string
   description: string
   url: String | null
   location: string | null
   geo: Geo | null
 }
-type Geo = {
+export type Geo = {
   lat: number
   lon: number
 }
@@ -63,6 +63,17 @@ function extractEventData(event: ical.VEvent): EventData {
     location: event.location || null,
     geo: tryToExtractGeo(event),
   };
+}
+
+function toDateOnly(date: ical.DateWithTimeZone, end: boolean): DateOnly {
+  return { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() - (end ? 1 : 0) }
+}
+
+function extractInterval(event: VEvent): Interval {
+  if(event.datetype === 'date') {
+    return { start: toDateOnly(event.start, false), end: toDateOnly(event.end, true) };
+  }
+  return { start: event.start, end: event.end };
 }
 
 const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
@@ -102,12 +113,12 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
   return {
     type: 'single',
     id: event.uid,
-    date: { start: event.start, end: event.end },
+    date: extractInterval(event),
     data: extractEventData(event),
   }
 }
 
-export function parse(content: string, now: Date) {
+export function parse(content: string, now: Date): Event[] {
   const calendar = ical.sync.parseICS(content)
   const events = Object.values(calendar).filter((event) => event.type === 'VEVENT') as VEvent[]
 
