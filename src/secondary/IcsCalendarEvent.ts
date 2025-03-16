@@ -1,5 +1,5 @@
 import { Event, EventData } from './IcsParser';
-import { CalendarEvent, Interval } from '../domain/CalendarEvent';
+import { CalendarEvent, Interval, DateOnly } from '../domain/CalendarEvent';
 import { Name } from '../domain/Name';
 import * as dateFns from 'date-fns';
 
@@ -26,8 +26,14 @@ export const toCalendarEvents =
     }
     else {
       const convert = convertToCalendarEvent(group)(event.data)
+      const formatKey = (date: DateOnly | Date) => {
+        if(date instanceof Date) {
+          return dateFns.formatISO(date)
+        }
+        return `${date.year}-${date.month}-${date.day}`
+      }
       return event.dates.map(date => {
-        return convert(`${event.id}-${dateFns.formatISO(date.start as Date)}`)(date)
+        return convert(`${event.id}-${formatKey(date.start)}`)(date)
       })
     }
   }
