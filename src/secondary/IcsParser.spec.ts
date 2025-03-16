@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { parse } from './IcsParser';
+import { parse, SingleEvent } from './IcsParser';
 
 const getSample = (name: string): string => fs.readFileSync(path.resolve(__dirname, 'samples', name + '.ics'), 'utf-8')
 
@@ -241,6 +241,29 @@ END:VEVENT`
     ]);
   });
 
+  it('detect full day', () => {
+    const content = `
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20240409
+DTEND;VALUE=DATE:20240410
+DTSTAMP:20250315T195944Z
+UID:1734128e-e4031cff-e22f-4506-b1b6-23082c597ecc
+CREATED:20240314T080647Z
+DESCRIPTION:https://www.helloasso.com/associations/hackyourjob-community-ly
+ on/evenements/unconf-avril-2024
+LAST-MODIFIED:20240314T080647Z
+LOCATION:L'augusterie\, 39 rue Alexandre Boutin 69100 Villeurbanne
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[HYJ] Unconf avril 2024
+TRANSP:TRANSPARENT
+END:VEVENT`
+
+    const calendarEvent = parse(content, now);
+
+    expect((calendarEvent[0] as SingleEvent).date).toStrictEqual({ start: { year: 2024, month: 4, day: 9 }, end: { year: 2024, month: 4, day: 9 } });
+  })
+
   it('extract events of google', () => {
     const content = getSample('google')
     const now = new Date(2025, 1, 2)
@@ -251,7 +274,7 @@ END:VEVENT`
       {
         type: 'single',
         id: '1734128e-e4031cff-e22f-4506-b1b6-23082c597ecc',
-        date: { start: new Date('2024-04-08T22:00:00.000Z'), end: new Date('2024-04-09T22:00:00.000Z') },
+        date: { start: { year: 2024, month: 4, day: 9 }, end: { year: 2024, month: 4, day: 9 } },
         data: {
           title: '[HYJ] Unconf avril 2024',
           description: 'https://www.helloasso.com/associations/hackyourjob-community-lyon/evenements/unconf-avril-2024',
