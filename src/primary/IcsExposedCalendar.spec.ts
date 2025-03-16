@@ -39,4 +39,20 @@ describe('IcsExposedCalendar', () => {
     expect(exposedCalendar).toContain('LOCATION:22 Rue Delambre 75014 Paris');
     expect(exposedCalendar).toContain('DESCRIPTION:Description');
   });
+
+  it('should convert full day event to ICS', async () => {
+    const exposedCalendar = await toIcsExposedCalendar([
+      CalendarEvent.of({
+        id: 'IdA',
+        date: { start: { year: 2024, month: 2, day: 3}, end: { year: 2024, month: 2, day: 3} },
+        title: Name.of('Exposed title'),
+        group: Name.of('full'),
+        description: 'Description',
+        address: '22 Rue Delambre 75014 Paris',
+      }),
+    ]);
+
+    expect(exposedCalendar).toContain('DTSTART;VALUE=DATE:20240203');
+    expect(exposedCalendar).toContain('DTEND;VALUE=DATE:20240204');
+  });
 });
