@@ -136,6 +136,75 @@ END:VEVENT`
     ]);
   });
 
+  it('support recurrent event', () => {
+    const content = `
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20240109T190000
+DTEND;TZID=Europe/Paris:20240109T210000
+RRULE:FREQ=MONTHLY;BYDAY=2TU
+EXDATE;TZID=Europe/Paris:20240213T190000
+EXDATE;TZID=Europe/Paris:20240409T190000
+EXDATE;TZID=Europe/Paris:20240910T190000
+EXDATE;TZID=Europe/Paris:20241008T190000
+EXDATE;TZID=Europe/Paris:20241210T190000
+EXDATE;TZID=Europe/Paris:20250114T190000
+EXDATE;TZID=Europe/Paris:20250211T190000
+DTSTAMP:20250315T195944Z
+UID:38slc1nh3ssaq09b5ac3tv7gpo_R20240109T180000@google.com
+CREATED:20190410T082134Z
+DESCRIPTION:https://www.meetup.com/fr-FR/humantalks-lyon/events/
+LAST-MODIFIED:20250311T191900Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Human Talks
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:NONE
+TRIGGER;VALUE=DATE-TIME:19760401T005545Z
+END:VALARM
+END:VEVENT`
+    const now = new Date(2025, 1, 2)
+
+    const calendarEvent = parse(content, now);
+
+    expect(calendarEvent).toStrictEqual([
+      {
+        type: 'recurrent',
+        id: '38slc1nh3ssaq09b5ac3tv7gpo_R20240109T180000@google.com',
+        dates: [
+          { start: new Date('2024-01-09T18:00:00.000Z'), end: new Date('2024-01-09T20:00:00.000Z') },
+          { start: new Date('2024-03-12T18:00:00.000Z'), end: new Date('2024-03-12T20:00:00.000Z') },
+          { start: new Date('2024-04-09T17:00:00.000Z'), end: new Date('2024-04-09T19:00:00.000Z') },
+          { start: new Date('2024-05-14T17:00:00.000Z'), end: new Date('2024-05-14T19:00:00.000Z') },
+          { start: new Date('2024-06-11T17:00:00.000Z'), end: new Date('2024-06-11T19:00:00.000Z') },
+          { start: new Date('2024-07-09T17:00:00.000Z'), end: new Date('2024-07-09T19:00:00.000Z') },
+          { start: new Date('2024-08-13T17:00:00.000Z'), end: new Date('2024-08-13T19:00:00.000Z') },
+          { start: new Date('2024-09-10T17:00:00.000Z'), end: new Date('2024-09-10T19:00:00.000Z') },
+          { start: new Date('2024-10-08T17:00:00.000Z'), end: new Date('2024-10-08T19:00:00.000Z') },
+          { start: new Date('2024-11-12T18:00:00.000Z'), end: new Date('2024-11-12T20:00:00.000Z') },
+          { start: new Date('2025-03-11T18:00:00.000Z'), end: new Date('2025-03-11T20:00:00.000Z') },
+          { start: new Date('2025-04-08T17:00:00.000Z'), end: new Date('2025-04-08T19:00:00.000Z') },
+          { start: new Date('2025-05-13T17:00:00.000Z'), end: new Date('2025-05-13T19:00:00.000Z') },
+          { start: new Date('2025-06-10T17:00:00.000Z'), end: new Date('2025-06-10T19:00:00.000Z') },
+          { start: new Date('2025-07-08T17:00:00.000Z'), end: new Date('2025-07-08T19:00:00.000Z') },
+          { start: new Date('2025-08-12T17:00:00.000Z'), end: new Date('2025-08-12T19:00:00.000Z') },
+          { start: new Date('2025-09-09T17:00:00.000Z'), end: new Date('2025-09-09T19:00:00.000Z') },
+          { start: new Date('2025-10-14T17:00:00.000Z'), end: new Date('2025-10-14T19:00:00.000Z') },
+          { start: new Date('2025-11-11T18:00:00.000Z'), end: new Date('2025-11-11T20:00:00.000Z') },
+          { start: new Date('2025-12-09T18:00:00.000Z'), end: new Date('2025-12-09T20:00:00.000Z') },
+          { start: new Date('2026-01-13T18:00:00.000Z'), end: new Date('2026-01-13T20:00:00.000Z') },
+        ],
+        data: {
+          title: 'Human Talks',
+          description: `https://www.meetup.com/fr-FR/humantalks-lyon/events/`,
+          url: null,
+          location: null,
+          geo: null,
+        }
+      }
+    ]);
+  });
+
   it('extract location event', () => {
     const content = `
 BEGIN:VEVENT
