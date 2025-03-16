@@ -82,7 +82,7 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
         }),
       data: {
         title: event.summary,
-        description: event.description,
+        description: event.description || '',
         url: formatUrl(event),
         location: event.location || null,
         geo: formatGeo(event),
@@ -97,7 +97,7 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
     end: event.end,
     data: {
       title: event.summary,
-      description: event.description,
+      description: event.description || '',
       url: formatUrl(event),
       location: event.location || null,
       geo: formatGeo(event),

@@ -245,13 +245,97 @@ END:VEVENT`
     ]);
   });
 
-  // it('extract events of google', () => {
-  //   const content = getSample('google')
+  it('extract events of google', () => {
+    const content = getSample('google')
+    const now = new Date(2025, 1, 2)
 
-  //   const calendarEvent = parse(content);
+    const calendarEvent = parse(content, now);
 
-  //   expect(calendarEvent).toBe('[minimal] Title');
-  // });
+    expect(calendarEvent).toStrictEqual([
+      {
+        type: 'single',
+        id: '1734128e-e4031cff-e22f-4506-b1b6-23082c597ecc',
+        start: new Date('2024-04-08T22:00:00.000Z'),
+        end: new Date('2024-04-09T22:00:00.000Z'),
+        data: {
+          title: '[HYJ] Unconf avril 2024',
+          description: 'https://www.helloasso.com/associations/hackyourjob-community-lyon/evenements/unconf-avril-2024',
+          url: null,
+          location: `L'augusterie, 39 rue Alexandre Boutin 69100 Villeurbanne`,
+          geo: null,
+        },
+      },
+      {
+        type: 'single',
+        id: '5q9fdptdbnp0drg660phqe6i7q@google.com',
+        start: new Date('2024-03-25T18:00:00.000Z'),
+        end: new Date('2024-03-25T20:00:00.000Z'),
+        data: {
+          title: '[SwCrafters] [CraftTalk] Le TDD : du Kata à la Production',
+          description: 'For full details, including the address, and to RSVP see: https://www.meetup.com/fr-FR/software-craftsmanship-lyon/events/299402173',
+          url: null,
+          location: `L'augusterie, 39 Rue Alexandre Boutin · Villeurbanne`,
+          geo: null,
+        },
+      },
+      {
+        type: 'recurrent',
+        id: '38slc1nh3ssaq09b5ac3tv7gpo@google.com',
+        dates: [
+          { start: new Date('2019-04-09T17:00:00.000Z'), end: new Date('2019-04-09T19:00:00.000Z') },
+          { start: new Date('2019-05-14T17:00:00.000Z'), end: new Date('2019-05-14T19:00:00.000Z') },
+          { start: new Date('2019-06-11T17:00:00.000Z'), end: new Date('2019-06-11T19:00:00.000Z') },
+          { start: new Date('2019-07-09T17:00:00.000Z'), end: new Date('2019-07-09T19:00:00.000Z') },
+          { start: new Date('2019-09-10T17:00:00.000Z'), end: new Date('2019-09-10T19:00:00.000Z') },
+          { start: new Date('2019-11-12T18:00:00.000Z'), end: new Date('2019-11-12T20:00:00.000Z') },
+          { start: new Date('2019-12-10T18:00:00.000Z'), end: new Date('2019-12-10T20:00:00.000Z') },
+          { start: new Date('2020-01-14T18:00:00.000Z'), end: new Date('2020-01-14T20:00:00.000Z') },
+          { start: new Date('2020-02-11T18:00:00.000Z'), end: new Date('2020-02-11T20:00:00.000Z') },
+        ],
+        data: {
+          title: 'Human Talks',
+          description: ``,
+          url: null,
+          location: null,
+          geo: null,
+        }
+      },
+      {
+        type: 'recurrent',
+        id: '38slc1nh3ssaq09b5ac3tv7gpo_R20240109T180000@google.com',
+        dates: [
+          { start: new Date('2024-01-09T18:00:00.000Z'), end: new Date('2024-01-09T20:00:00.000Z') },
+          { start: new Date('2024-03-12T18:00:00.000Z'), end: new Date('2024-03-12T20:00:00.000Z') },
+          { start: new Date('2024-04-09T17:00:00.000Z'), end: new Date('2024-04-09T19:00:00.000Z') },
+          { start: new Date('2024-05-14T17:00:00.000Z'), end: new Date('2024-05-14T19:00:00.000Z') },
+          { start: new Date('2024-06-11T17:00:00.000Z'), end: new Date('2024-06-11T19:00:00.000Z') },
+          { start: new Date('2024-07-09T17:00:00.000Z'), end: new Date('2024-07-09T19:00:00.000Z') },
+          { start: new Date('2024-08-13T17:00:00.000Z'), end: new Date('2024-08-13T19:00:00.000Z') },
+          { start: new Date('2024-09-10T17:00:00.000Z'), end: new Date('2024-09-10T19:00:00.000Z') },
+          { start: new Date('2024-10-08T17:00:00.000Z'), end: new Date('2024-10-08T19:00:00.000Z') },
+          { start: new Date('2024-11-12T18:00:00.000Z'), end: new Date('2024-11-12T20:00:00.000Z') },
+          { start: new Date('2025-03-11T18:00:00.000Z'), end: new Date('2025-03-11T20:00:00.000Z') },
+          { start: new Date('2025-04-08T17:00:00.000Z'), end: new Date('2025-04-08T19:00:00.000Z') },
+          { start: new Date('2025-05-13T17:00:00.000Z'), end: new Date('2025-05-13T19:00:00.000Z') },
+          { start: new Date('2025-06-10T17:00:00.000Z'), end: new Date('2025-06-10T19:00:00.000Z') },
+          { start: new Date('2025-07-08T17:00:00.000Z'), end: new Date('2025-07-08T19:00:00.000Z') },
+          { start: new Date('2025-08-12T17:00:00.000Z'), end: new Date('2025-08-12T19:00:00.000Z') },
+          { start: new Date('2025-09-09T17:00:00.000Z'), end: new Date('2025-09-09T19:00:00.000Z') },
+          { start: new Date('2025-10-14T17:00:00.000Z'), end: new Date('2025-10-14T19:00:00.000Z') },
+          { start: new Date('2025-11-11T18:00:00.000Z'), end: new Date('2025-11-11T20:00:00.000Z') },
+          { start: new Date('2025-12-09T18:00:00.000Z'), end: new Date('2025-12-09T20:00:00.000Z') },
+          { start: new Date('2026-01-13T18:00:00.000Z'), end: new Date('2026-01-13T20:00:00.000Z') },
+        ],
+        data: {
+          title: 'Human Talks',
+          description: `https://www.meetup.com/fr-FR/humantalks-lyon/events/`,
+          url: null,
+          location: null,
+          geo: null,
+        }
+      },
+    ]);
+  });
 
   it('extract events of meetup', () => {
     const content = getSample('meetup')
