@@ -50,8 +50,7 @@ END:VCALENDAR`
       {
         type: 'single',
         id: 'event_306666704@meetup.com',
-        start: new Date('2025-03-19T18:00:00.000Z'),
-        end: new Date('2025-03-19T20:00:00.000Z'),
+        date: { start: new Date('2025-03-19T18:00:00.000Z'), end: new Date('2025-03-19T20:00:00.000Z') },
         data: {
           title: '[En ligne] Forum ouvert',
           description: `BlaBla
@@ -86,8 +85,7 @@ END:VEVENT`
       {
         type: 'single',
         id: '606@aldil.org',
-        start: new Date('2025-03-27T17:30:00.000Z'),
-        end: new Date('2025-03-27T19:00:00.000Z'),
+        date: { start: new Date('2025-03-27T17:30:00.000Z'), end: new Date('2025-03-27T19:00:00.000Z') },
         data: {
           title: 'Réunion du CA',
           description: `Réunion administrative`,
@@ -123,8 +121,7 @@ END:VEVENT`
       {
         type: 'single',
         id: 'event_306666704@meetup.com',
-        start: new Date('2025-03-19T18:00:00.000Z'),
-        end: new Date('2025-03-19T20:00:00.000Z'),
+        date: { start: new Date('2025-03-19T18:00:00.000Z'), end: new Date('2025-03-19T20:00:00.000Z') },
         data: {
           title: '[En ligne] Forum ouvert',
           description: `BlaBla`,
@@ -232,8 +229,7 @@ END:VEVENT`
       {
         type: 'single',
         id: '628@aldil.org',
-        start: new Date('2025-03-21T09:00:00.000Z'),
-        end: new Date('2025-03-23T19:00:00.000Z'),
+        date: { start: new Date('2025-03-21T09:00:00.000Z'), end: new Date('2025-03-23T19:00:00.000Z') },
         data: {
           title: 'Salon Primevère',
           description: `Comme chaque année`,
@@ -255,8 +251,7 @@ END:VEVENT`
       {
         type: 'single',
         id: '1734128e-e4031cff-e22f-4506-b1b6-23082c597ecc',
-        start: new Date('2024-04-08T22:00:00.000Z'),
-        end: new Date('2024-04-09T22:00:00.000Z'),
+        date: { start: new Date('2024-04-08T22:00:00.000Z'), end: new Date('2024-04-09T22:00:00.000Z') },
         data: {
           title: '[HYJ] Unconf avril 2024',
           description: 'https://www.helloasso.com/associations/hackyourjob-community-lyon/evenements/unconf-avril-2024',
@@ -268,8 +263,7 @@ END:VEVENT`
       {
         type: 'single',
         id: '5q9fdptdbnp0drg660phqe6i7q@google.com',
-        start: new Date('2024-03-25T18:00:00.000Z'),
-        end: new Date('2024-03-25T20:00:00.000Z'),
+        date: { start: new Date('2024-03-25T18:00:00.000Z'), end: new Date('2024-03-25T20:00:00.000Z') },
         data: {
           title: '[SwCrafters] [CraftTalk] Le TDD : du Kata à la Production',
           description: 'For full details, including the address, and to RSVP see: https://www.meetup.com/fr-FR/software-craftsmanship-lyon/events/299402173',
@@ -346,8 +340,7 @@ END:VEVENT`
       {
         type: 'single',
         id: 'event_306666704@meetup.com',
-        start: new Date('2025-03-19T18:00:00.000Z'),
-        end: new Date('2025-03-19T20:00:00.000Z'),
+        date: { start: new Date('2025-03-19T18:00:00.000Z'), end: new Date('2025-03-19T20:00:00.000Z') },
         data: {
           title: '[En ligne] Forum ouvert',
           description: `BlaBla
@@ -361,8 +354,7 @@ END:VEVENT`
       {
         type: 'single',
         id: 'event_306104038@meetup.com',
-        start: new Date('2025-03-20T17:30:00.000Z'),
-        end: new Date('2025-03-20T20:30:00.000Z'),
+        date: { start: new Date('2025-03-20T17:30:00.000Z'), end: new Date('2025-03-20T20:30:00.000Z') },
         data: {
           title: '🍻 Super Apéro PHP chez WanadevDigital 🥤',
           description: `Antenne AFUP Lyon`,
@@ -383,8 +375,7 @@ END:VEVENT`
       {
         type: 'single',
         id: '630@aldil.org',
-        start: new Date('2025-03-18T17:30:00.000Z'),
-        end: new Date('2025-03-18T19:00:00.000Z'),
+        date: { start: new Date('2025-03-18T17:30:00.000Z'), end: new Date('2025-03-18T19:00:00.000Z') },
         data: {
           title: 'Réunion du CA',
           description: `Réunion administrative
@@ -402,8 +393,7 @@ A distance avec BigBlueButton (lien fourni aux membres et aux invité•e•s).`
       {
         type: 'single',
         id: '592@aldil.org',
-        start: new Date('2025-03-20T18:00:00.000Z'),
-        end: new Date('2025-03-20T20:00:00.000Z'),
+        date: { start: new Date('2025-03-20T18:00:00.000Z'), end: new Date('2025-03-20T20:00:00.000Z') },
         data: {
           title: 'Jeudi du graphisme : Illustrations personnalisables',
           description: `Illustrer vos supports visuels avec des mises en scène sur mesure
@@ -423,8 +413,7 @@ Atelier animé les étudiant•e•s de la Licence Colibre, partenaire de l'ALDI
       {
         type: 'single',
         id: '628@aldil.org',
-        start: new Date('2025-03-21T09:00:00.000Z'),
-        end: new Date('2025-03-23T19:00:00.000Z'),
+        date: { start: new Date('2025-03-21T09:00:00.000Z'), end: new Date('2025-03-23T19:00:00.000Z') },
         data: {
           title: 'Salon Primevère',
           description: `Comme chaque année, l’ALDIL sera présente sur l’espace Numérique Libre du salon Primevère pour faire connaitre les logiciels libres par l'échange sur le stand et par les conférences proposées tout au long du salon.
@@ -453,8 +442,7 @@ Plus d'infos sur https://www.salonprimevere.org/`,
       {
         type: 'single',
         id: '606@aldil.org',
-        start: new Date('2025-03-27T17:30:00.000Z'),
-        end: new Date('2025-03-27T19:00:00.000Z'),
+        date: { start: new Date('2025-03-27T17:30:00.000Z'), end: new Date('2025-03-27T19:00:00.000Z') },
         data: {
           title: 'Réunion du CA',
           description: `Réunion administrative
