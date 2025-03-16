@@ -2,7 +2,7 @@ import * as ical from 'node-ical';
 import { VEvent } from 'node-ical';
 import * as dateFns from 'date-fns';
 import { getTimezoneOffset } from 'date-fns-tz';
-import { Interval, DateOnly } from '../domain/CalendarEvent';
+import { Interval, DateOnly, Geo } from '../domain/CalendarEvent';
 
 export type Event = RecurrentEvent | SingleEvent
 export type RecurrentEvent = {
@@ -23,10 +23,6 @@ export type EventData = {
   url: String | null
   location: string | null
   geo: Geo | null
-}
-export type Geo = {
-  lat: number
-  lon: number
 }
 
 function tryToExtractUrl(event: VEvent): String | null {

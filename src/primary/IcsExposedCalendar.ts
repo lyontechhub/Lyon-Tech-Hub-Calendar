@@ -23,6 +23,7 @@ const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes => ({
   end: calendarEvent.end.getTime(),
   location: calendarEvent.address,
   description: calendarEvent.description,
+
 });
 
 const toEventAttributesList = (calendar: Calendar): EventAttributes[] => calendar.map(toEventAttributes);
