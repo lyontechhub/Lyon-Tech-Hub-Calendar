@@ -2,6 +2,7 @@ import * as ical from 'node-ical';
 import { VEvent } from 'node-ical';
 import * as dateFns from 'date-fns';
 import { getTimezoneOffset } from 'date-fns-tz';
+import { Interval, DateOnly } from '../domain/CalendarEvent';
 
 export type Event = RecurrentEvent | SingleEvent
 export type RecurrentEvent = {
@@ -10,16 +11,6 @@ export type RecurrentEvent = {
   dates: Interval[]
   data: EventData
 }
-export type Interval = IntervalDateTime | IntervalDateOnly
-export type IntervalDateTime = {
-  start: Date
-  end: Date
-}
-export type IntervalDateOnly = {
-  start: DateOnly
-  end: DateOnly
-}
-export type DateOnly = { year: number; month: number; day: number }
 export type SingleEvent = {
   type: 'single'
   id: string
