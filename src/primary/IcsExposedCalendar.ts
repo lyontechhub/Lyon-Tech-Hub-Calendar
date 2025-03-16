@@ -19,11 +19,10 @@ const fromEventAttributesToIcsExposedCalendar = (events: EventAttributes[]): Pro
 const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes => ({
   productId: 'lyontechhub/ics',
   title: calendarEvent.fullTitle.get,
-  start: calendarEvent.start.getTime(),
-  end: calendarEvent.end.getTime(),
+  start: (calendarEvent.date.start as Date).getTime(),
+  end: (calendarEvent.date.end as Date).getTime(),
   location: calendarEvent.address,
   description: calendarEvent.description,
-
 });
 
 const toEventAttributesList = (calendar: Calendar): EventAttributes[] => calendar.map(toEventAttributes);

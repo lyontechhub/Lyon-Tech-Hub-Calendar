@@ -6,8 +6,8 @@ import { Name } from './Name';
 const expectForCalendarEvent = (minimal: CalendarEvent) => {
   expect(minimal.id).toBe('idA');
   expect(minimal.fullTitle.get).toBe('[Group] Title');
-  expect(minimal.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
-  expect(minimal.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
+  expect(minimal.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
+  expect(minimal.date.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
 };
 
 const makeMinimalCalendar = (override: Partial<CalendarEventBuilder> = {}) =>
@@ -15,8 +15,7 @@ const makeMinimalCalendar = (override: Partial<CalendarEventBuilder> = {}) =>
     id: 'idA',
     title: Name.of('Title'),
     group: Name.of('Group'),
-    start: new Date('2024-01-01T00:00:00.000Z'),
-    end: new Date('2024-01-01T01:00:00.000Z'),
+    date: { start: new Date('2024-01-01T00:00:00.000Z'), end: new Date('2024-01-01T01:00:00.000Z') },
     ...override,
   });
 

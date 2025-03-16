@@ -9,8 +9,8 @@ describe('IcsExposedCalendar', () => {
   it('should convert minimal to ICS', async () => {
     const exposedCalendar = await toIcsExposedCalendar([
       CalendarEvent.of({
-        start: new Date('2024-02-02T12:00:00.000Z'),
-        end: new Date('2024-02-02T13:00:00.000Z'),
+        id: 'IdA',
+        date: { start: new Date('2024-02-02T12:00:00.000Z'), end: new Date('2024-02-02T13:00:00.000Z') },
         title: Name.of('Exposed title'),
         group: Name.of('minimal'),
       }),
@@ -24,8 +24,8 @@ describe('IcsExposedCalendar', () => {
   it('should convert full to ICS', async () => {
     const exposedCalendar = await toIcsExposedCalendar([
       CalendarEvent.of({
-        start: new Date('2024-02-02T12:00:00.000Z'),
-        end: new Date('2024-02-02T13:00:00.000Z'),
+        id: 'IdA',
+        date: { start: new Date('2024-02-02T12:00:00.000Z'), end: new Date('2024-02-02T13:00:00.000Z') },
         title: Name.of('Exposed title'),
         group: Name.of('full'),
         description: 'Description',

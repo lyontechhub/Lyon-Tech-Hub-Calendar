@@ -4,9 +4,8 @@ export type CalendarEventBuilder = {
   id: string;
   title: Name;
   group: Name;
-  start: Date;
+  date: Interval;
   description?: string;
-  end: Date;
   address?: string;
   geo?: Geo;
   url?: string;
@@ -30,8 +29,7 @@ export class CalendarEvent {
   readonly id: string;
   readonly #title: Name;
   readonly #group: Name;
-  readonly start: Date;
-  readonly end: Date;
+  readonly date: Interval;
   readonly description?: string;
   readonly address?: string;
   readonly geo?: Geo;
@@ -41,8 +39,7 @@ export class CalendarEvent {
     this.#title = builder.title;
     this.#group = builder.group;
     this.id = builder.id;
-    this.start = builder.start;
-    this.end = builder.end;
+    this.date = builder.date;
     this.description = builder.description;
     this.address = builder.address;
     this.geo = builder.geo;

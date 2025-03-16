@@ -11,7 +11,6 @@ export const toCalendarEvent =
       title: Name.of(vEvent.summary),
       description: vEvent.description,
       group: Name.of(group),
-      start: vEvent.start,
-      end: vEvent.end,
+      date: { start: vEvent.start, end: vEvent.end },
       address: vEvent.location,
     });
