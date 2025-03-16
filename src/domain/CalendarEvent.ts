@@ -15,6 +15,16 @@ export type Geo = {
   lat: number
   lon: number
 }
+export type Interval = IntervalDateTime | IntervalDateOnly
+export type IntervalDateTime = {
+  start: Date
+  end: Date
+}
+export type IntervalDateOnly = {
+  start: DateOnly
+  end: DateOnly
+}
+export type DateOnly = { year: number; month: number; day: number }
 
 export class CalendarEvent {
   readonly id: string;
