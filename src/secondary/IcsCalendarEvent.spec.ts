@@ -59,4 +59,44 @@ describe('IcsCalendarEvent', () => {
     expect(calendarEvent.geo).toStrictEqual({ lat: 45.7318991, lon: 4.9481330 });
     expect(calendarEvent.url).toBe('https://www.example.com');
   });
+
+  it('should convert recurrent event to single event', () => {
+    const event: Event = {
+      type: 'recurrent',
+      id: '901AC34F-5C83-4ACC-8619-95C9CE39DF95',
+      dates: [
+        { start: new Date('2024-01-01T00:00:00.000Z'), end: new Date('2024-01-01T01:00:00.000Z') },
+        { start: new Date('2024-01-03T00:00:00.000Z'), end: new Date('2024-01-03T01:00:00.000Z') },
+      ],
+      data: {
+        title: 'Title',
+        description: `Comme chaque année`,
+        url: 'https://www.example.com',
+        location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
+        geo: { lat: 45.7318991, lon: 4.9481330 },
+      }
+    };
+
+    const calendarEvents = toCalendarEvents('full')(event);
+
+    expect(calendarEvents).length(2)
+
+    calendarEvents.forEach(calendarEvent => {
+      expect(calendarEvent.fullTitle.get).toBe('[full] Title');
+      expect(calendarEvent.description).toEqual('Comme chaque année');
+      expect(calendarEvent.address).toBe('EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France');
+      expect(calendarEvent.geo).toStrictEqual({ lat: 45.7318991, lon: 4.9481330 });
+      expect(calendarEvent.url).toBe('https://www.example.com');
+    });
+
+    const calendarEvent1 = calendarEvents[0]
+    expect(calendarEvent1.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95-2024-01-01T01:00:00+01:00');
+    expect(calendarEvent1.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
+    expect(calendarEvent1.date.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
+
+    const calendarEvent2 = calendarEvents[1]
+    expect(calendarEvent2.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95-2024-01-03T01:00:00+01:00');
+    expect(calendarEvent2.date.start).toEqual(new Date('2024-01-03T00:00:00.000Z'));
+    expect(calendarEvent2.date.end).toEqual(new Date('2024-01-03T01:00:00.000Z'));
+  });
 });
