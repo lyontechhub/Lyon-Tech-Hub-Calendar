@@ -70,7 +70,7 @@ const parseEvent =
   (limitMax: Date) =>
   (event: VEvent): Event => {
     if (event.rrule) {
-      const excludeDates = Object.values(event.exdate).map((d) => dateFns.startOfDay(d as Date));
+      const excludeDates = event.exdate ? Object.values(event.exdate).map((d) => dateFns.startOfDay(d as Date)) : [];
       const rrule = event.rrule;
       const fixDate = (date: Date) => {
         // Fix to correct the time according to the timezone documented in the libs readme. The question is why doesn't the libs do this directly??

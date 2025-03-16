@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { describe, it, expect } from 'vitest';
 
-import { parse, SingleEvent } from './IcsParser';
+import { parse, RecurrentEvent, SingleEvent } from './IcsParser';
 
 const getSample = (name: string): string => fs.readFileSync(path.resolve(__dirname, 'samples', name + '.ics'), 'utf-8');
 
@@ -198,6 +198,34 @@ END:VEVENT`;
         },
       },
     ]);
+  });
+
+  it('support recurrent event without exclude date', () => {
+    const content = `
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20240109T190000
+DTEND;TZID=Europe/Paris:20240109T210000
+RRULE:FREQ=MONTHLY;BYDAY=2TU
+DTSTAMP:20250315T195944Z
+UID:38slc1nh3ssaq09b5ac3tv7gpo_R20240109T180000@google.com
+CREATED:20190410T082134Z
+DESCRIPTION:https://www.meetup.com/fr-FR/humantalks-lyon/events/
+LAST-MODIFIED:20250311T191900Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Human Talks
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:NONE
+TRIGGER;VALUE=DATE-TIME:19760401T005545Z
+END:VALARM
+END:VEVENT`;
+    const now = new Date(2025, 1, 2);
+
+    const calendarEvent = parse(content, now);
+
+    expect(calendarEvent).length(1);
+    expect((calendarEvent[0] as RecurrentEvent).dates).length(25);
   });
 
   it('extract location event', () => {
