@@ -48,7 +48,7 @@ const parseEvent = (event: VEvent): SingleEvent[] => {
   }]
 }
 
-export function parse(content: string) {
+export function parse(content: string, now: Date) {
   const calendar = ical.sync.parseICS(content)
   const events = Object.values(calendar).filter((event) => event.type === 'VEVENT') as VEvent[]
 
