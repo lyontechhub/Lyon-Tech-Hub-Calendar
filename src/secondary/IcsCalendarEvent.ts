@@ -28,7 +28,7 @@ export const toCalendarEvents =
       const convert = convertToCalendarEvent(group)(event.data)
       const formatKey = (date: DateOnly | Date) => {
         if(date instanceof Date) {
-          return dateFns.formatISO(date)
+          return dateFns.formatDate(date, 'yyyy-MM-dd')
         }
         return `${date.year}-${date.month}-${date.day}`
       }
