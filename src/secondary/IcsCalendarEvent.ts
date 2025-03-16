@@ -1,16 +1,23 @@
-import { VEvent } from 'node-ical';
-
+import { Event } from './IcsParser';
 import { CalendarEvent } from '../domain/CalendarEvent';
 import { Name } from '../domain/Name';
 
 export const toCalendarEvent =
   (group: string) =>
-  (vEvent: VEvent): CalendarEvent =>
-    CalendarEvent.of({
-      id: `${group}-${vEvent.uid}`,
-      title: Name.of(vEvent.summary),
-      description: vEvent.description,
-      group: Name.of(group),
-      date: { start: vEvent.start, end: vEvent.end },
-      address: vEvent.location,
-    });
+  (event: Event): CalendarEvent => {
+    if(event.type == 'single') {
+      return CalendarEvent.of({
+        id: `${group}-${event.id}`,
+        title: Name.of(event.data.title),
+        description: event.data.description,
+        group: Name.of(group),
+        date: event.date,
+        address: event.data.location || undefined,
+        geo: event.data.geo || undefined,
+        url: event.data.url || undefined,
+      });
+    }
+
+    throw new Error('not implemented')
+  }
+
