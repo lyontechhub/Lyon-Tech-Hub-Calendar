@@ -65,7 +65,7 @@ function extractInterval(event: VEvent): Interval {
 
 const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
   if(event.rrule) {
-    const excludeDates = Object.values(event.exdate)
+    const excludeDates = Object.values(event.exdate).map(d => dateFns.startOfDay(d as Date))
     const rrule = event.rrule
     const fixDate = (date: Date) => {
       // Fix to correct the time according to the timezone documented in the libs readme. The question is why doesn't the libs do this directly??
@@ -87,7 +87,7 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
       dates:
         event.rrule
         .between(dateFns.addDays(event.start, -1), limitMax)
-        .filter(d => !excludeDates.some(exclude => dateFns.isEqual(d, exclude as Date)))
+        .filter(d => !excludeDates.some(exclude => dateFns.isEqual(dateFns.startOfDay(d), exclude)))
         .map(date => {
           const start = fixDate(date)
           const duration = dateFns.differenceInMilliseconds(event.end, event.start)
