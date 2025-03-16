@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { toCalendarEvent } from './IcsCalendarEvent';
+import { toCalendarEvents } from './IcsCalendarEvent';
 import { Event } from './IcsParser';
 
 describe('IcsCalendarEvent', () => {
@@ -18,8 +18,10 @@ describe('IcsCalendarEvent', () => {
       }
     };
 
-    const calendarEvent = toCalendarEvent('minimal')(event);
+    const calendarEvents = toCalendarEvents('minimal')(event);
 
+    expect(calendarEvents).length(1)
+    const calendarEvent = calendarEvents[0]
     expect(calendarEvent.fullTitle.get).toBe('[minimal] Title');
     expect(calendarEvent.id).toBe('minimal-idA');
     expect(calendarEvent.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
@@ -44,8 +46,10 @@ describe('IcsCalendarEvent', () => {
       }
     };
 
-    const calendarEvent = toCalendarEvent('full')(event);
+    const calendarEvents = toCalendarEvents('full')(event);
 
+    expect(calendarEvents).length(1)
+    const calendarEvent = calendarEvents[0]
     expect(calendarEvent.fullTitle.get).toBe('[full] Title');
     expect(calendarEvent.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95');
     expect(calendarEvent.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
