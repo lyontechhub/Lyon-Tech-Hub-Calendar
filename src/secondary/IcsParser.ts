@@ -33,7 +33,7 @@ type Geo = {
   lon: number
 }
 
-function formatUrl(event: VEvent): String | null {
+function tryToExtractUrl(event: VEvent): String | null {
   const url = event.url as any
   if(url === null || url === undefined) return null;
   if(typeof url == 'string') return url;
@@ -42,7 +42,7 @@ function formatUrl(event: VEvent): String | null {
   throw new Error(`Invalid url for event ${event.uid} => ${event.url}`);
 }
 
-function formatGeo(event: VEvent): Geo | null {
+function tryToExtractGeo(event: VEvent): Geo | null {
   const geo = event.geo
   if(geo === null || geo === undefined) return null;
   if(geo instanceof Object && typeof geo.lat == 'number' && typeof geo.lon == 'number') return geo;
@@ -83,9 +83,9 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
       data: {
         title: event.summary,
         description: event.description || '',
-        url: formatUrl(event),
+        url: tryToExtractUrl(event),
         location: event.location || null,
-        geo: formatGeo(event),
+        geo: tryToExtractGeo(event),
       }
     }
   }
@@ -98,9 +98,9 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
     data: {
       title: event.summary,
       description: event.description || '',
-      url: formatUrl(event),
+      url: tryToExtractUrl(event),
       location: event.location || null,
-      geo: formatGeo(event),
+      geo: tryToExtractGeo(event),
     },
   }
 }
