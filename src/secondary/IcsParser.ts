@@ -7,18 +7,23 @@ type Event = RecurrentEvent | SingleEvent
 type RecurrentEvent = {
   type: 'recurrent'
   id: string
-  dates: RecurrentEventDate[]
+  dates: Interval[]
   data: EventData
 }
-type RecurrentEventDate = {
+type Interval = IntervalDateTime | IntervalDateOnly
+type IntervalDateTime = {
   start: Date
   end: Date
 }
+type IntervalDateOnly = {
+  start: DateOnly
+  end: DateOnly
+}
+type DateOnly = { year: number; month: number; day: number }
 type SingleEvent = {
   type: 'single'
   id: string
-  start: Date
-  end: Date
+  date: Interval
   data: EventData
 }
 type EventData = {
@@ -97,8 +102,7 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
   return {
     type: 'single',
     id: event.uid,
-    start: event.start,
-    end: event.end,
+    date: { start: event.start, end: event.end },
     data: extractEventData(event),
   }
 }
