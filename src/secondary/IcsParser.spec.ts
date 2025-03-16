@@ -50,15 +50,17 @@ END:VCALENDAR`
       {
         type: 'single',
         id: 'event_306666704@meetup.com',
-        title: '[En ligne] Forum ouvert',
-        description: `BlaBla
-
-1. Blibli`,
         start: new Date('2025-03-19T18:00:00.000Z'),
         end: new Date('2025-03-19T20:00:00.000Z'),
-        url: null,
-        location: null,
-        geo: null,
+        data: {
+          title: '[En ligne] Forum ouvert',
+          description: `BlaBla
+
+1. Blibli`,
+          url: null,
+          location: null,
+          geo: null,
+        }
       }
     ]);
   });
@@ -84,13 +86,15 @@ END:VEVENT`
       {
         type: 'single',
         id: '606@aldil.org',
-        title: 'Réunion du CA',
-        description: `Réunion administrative`,
         start: new Date('2025-03-27T17:30:00.000Z'),
         end: new Date('2025-03-27T19:00:00.000Z'),
-        url: 'https://www.aldil.org/events/reunion-du-ca-44/',
-        location: null,
-        geo: null,
+        data: {
+          title: 'Réunion du CA',
+          description: `Réunion administrative`,
+          url: 'https://www.aldil.org/events/reunion-du-ca-44/',
+          location: null,
+          geo: null,
+        }
       }
     ]);
   });
@@ -119,13 +123,55 @@ END:VEVENT`
       {
         type: 'single',
         id: 'event_306666704@meetup.com',
-        title: '[En ligne] Forum ouvert',
-        description: `BlaBla`,
         start: new Date('2025-03-19T18:00:00.000Z'),
         end: new Date('2025-03-19T20:00:00.000Z'),
-        url: 'https://www.meetup.com/software-craftsmanship-lyon/events/306666704/',
-        location: null,
-        geo: null,
+        data: {
+          title: '[En ligne] Forum ouvert',
+          description: `BlaBla`,
+          url: 'https://www.meetup.com/software-craftsmanship-lyon/events/306666704/',
+          location: null,
+          geo: null,
+        }
+      }
+    ]);
+  });
+
+  it('extract location event', () => {
+    const content = `
+BEGIN:VEVENT
+UID:628@aldil.org
+DTSTART;TZID=Europe/Paris:20250321T100000
+DTEND;TZID=Europe/Paris:20250323T200000
+DTSTAMP:20250309T220455Z
+URL:https://www.aldil.org/events/salon-primevere-3/
+SUMMARY:Salon Primevère
+DESCRIPTION:Comme chaque année
+ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2024/02
+ /primevere-2024.png
+CATEGORIES:Primevère,Salon - Convention
+LOCATION:EUREXPO LYON\, Boulevard de l'Europe\, CHASSIEU\, 69680\, Auvergne
+ -Rhône-Alpes\, France
+GEO:45.7318991;4.9481330
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=Boulevard de l'Europe\, CHA
+ SSIEU\, 69680\, Auvergne-Rhône-Alpes\, France;X-APPLE-RADIUS=100;X-TITLE=
+ EUREXPO LYON:geo:45.7318991,4.9481330
+END:VEVENT`
+
+    const calendarEvent = parse(content, now);
+
+    expect(calendarEvent).toStrictEqual([
+      {
+        type: 'single',
+        id: '628@aldil.org',
+        start: new Date('2025-03-21T09:00:00.000Z'),
+        end: new Date('2025-03-23T19:00:00.000Z'),
+        data: {
+          title: 'Salon Primevère',
+          description: `Comme chaque année`,
+          url: 'https://www.aldil.org/events/salon-primevere-3/',
+          location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
+          geo: { lat: 45.7318991, lon: 4.9481330 },
+        }
       }
     ]);
   });
@@ -147,26 +193,30 @@ END:VEVENT`
       {
         type: 'single',
         id: 'event_306666704@meetup.com',
-        title: '[En ligne] Forum ouvert',
-        description: `BlaBla
-
-1. Blibli`,
         start: new Date('2025-03-19T18:00:00.000Z'),
         end: new Date('2025-03-19T20:00:00.000Z'),
-        url: 'https://www.meetup.com/software-craftsmanship-lyon/events/306666704/',
-        location: null,
-        geo: null,
+        data: {
+          title: '[En ligne] Forum ouvert',
+          description: `BlaBla
+
+1. Blibli`,
+          url: 'https://www.meetup.com/software-craftsmanship-lyon/events/306666704/',
+          location: null,
+          geo: null,
+        }
       },
       {
         type: 'single',
         id: 'event_306104038@meetup.com',
-        title: '🍻 Super Apéro PHP chez WanadevDigital 🥤',
-        description: `Antenne AFUP Lyon`,
         start: new Date('2025-03-20T17:30:00.000Z'),
         end: new Date('2025-03-20T20:30:00.000Z'),
-        url: 'https://www.meetup.com/afup-lyon-php/events/306104038/',
-        location: null,
-        geo: null,
+        data: {
+          title: '🍻 Super Apéro PHP chez WanadevDigital 🥤',
+          description: `Antenne AFUP Lyon`,
+          url: 'https://www.meetup.com/afup-lyon-php/events/306104038/',
+          location: null,
+          geo: null,
+        }
       },
     ]);
   });
@@ -180,25 +230,30 @@ END:VEVENT`
       {
         type: 'single',
         id: '630@aldil.org',
-        title: 'Réunion du CA',
-        description: `Réunion administrative
+        start: new Date('2025-03-18T17:30:00.000Z'),
+        end: new Date('2025-03-18T19:00:00.000Z'),
+        data: {
+          title: 'Réunion du CA',
+          description: `Réunion administrative
 
 Réservé aux adhérent·e·s et invité·e·s
 
 Réunion intermédiaire. (à confirmer)
 
 A distance avec BigBlueButton (lien fourni aux membres et aux invité•e•s).`,
-        start: new Date('2025-03-18T17:30:00.000Z'),
-        end: new Date('2025-03-18T19:00:00.000Z'),
-        url: 'https://www.aldil.org/events/reunion-du-ca-48/',
-        location: null,
-        geo: null,
+          url: 'https://www.aldil.org/events/reunion-du-ca-48/',
+          location: null,
+          geo: null,
+        }
       },
       {
         type: 'single',
         id: '592@aldil.org',
-        title: 'Jeudi du graphisme : Illustrations personnalisables',
-        description: `Illustrer vos supports visuels avec des mises en scène sur mesure
+        start: new Date('2025-03-20T18:00:00.000Z'),
+        end: new Date('2025-03-20T20:00:00.000Z'),
+        data: {
+          title: 'Jeudi du graphisme : Illustrations personnalisables',
+          description: `Illustrer vos supports visuels avec des mises en scène sur mesure
 
 Comment optimiser l'utilisation du site undraw.co pour trouver desillustrations personnalisables directement sur le site ou encore plus subtilement avec Inkscape.
 GRATUIT
@@ -207,17 +262,19 @@ Atelier animé les étudiant•e•s de la Licence Colibre, partenaire de l'ALDI
 
 
 `,
-        start: new Date('2025-03-20T18:00:00.000Z'),
-        end: new Date('2025-03-20T20:00:00.000Z'),
-        url: 'https://www.aldil.org/events/jeudi-du-graphisme-2025-03/',
-        location: 'Maison pour tous / Salle des Rancy, 249 rue Vendôme, LYON, 69003, Auvergne-Rhône-Alpes, France',
-        geo: { lat: 45.7559745, lon: 4.8477739 },
+          url: 'https://www.aldil.org/events/jeudi-du-graphisme-2025-03/',
+          location: 'Maison pour tous / Salle des Rancy, 249 rue Vendôme, LYON, 69003, Auvergne-Rhône-Alpes, France',
+          geo: { lat: 45.7559745, lon: 4.8477739 },
+        }
       },
       {
         type: 'single',
         id: '628@aldil.org',
-        title: 'Salon Primevère',
-        description: `Comme chaque année, l’ALDIL sera présente sur l’espace Numérique Libre du salon Primevère pour faire connaitre les logiciels libres par l'échange sur le stand et par les conférences proposées tout au long du salon.
+        start: new Date('2025-03-21T09:00:00.000Z'),
+        end: new Date('2025-03-23T19:00:00.000Z'),
+        data: {
+          title: 'Salon Primevère',
+          description: `Comme chaque année, l’ALDIL sera présente sur l’espace Numérique Libre du salon Primevère pour faire connaitre les logiciels libres par l'échange sur le stand et par les conférences proposées tout au long du salon.
 
 OUVERTURE
 Vendredi 11h - 21h
@@ -235,17 +292,19 @@ Pas de tente de conférence dédiée cette année, mais des interventions tout d
 &nbsp;
 
 Plus d'infos sur https://www.salonprimevere.org/`,
-        start: new Date('2025-03-21T09:00:00.000Z'),
-        end: new Date('2025-03-23T19:00:00.000Z'),
-        url: 'https://www.aldil.org/events/salon-primevere-3/',
-        location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
-        geo: { lat: 45.7318991, lon: 4.9481330 },
+          url: 'https://www.aldil.org/events/salon-primevere-3/',
+          location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
+          geo: { lat: 45.7318991, lon: 4.9481330 },
+        }
       },
       {
         type: 'single',
         id: '606@aldil.org',
-        title: 'Réunion du CA',
-        description: `Réunion administrative
+        start: new Date('2025-03-27T17:30:00.000Z'),
+        end: new Date('2025-03-27T19:00:00.000Z'),
+        data: {
+          title: 'Réunion du CA',
+          description: `Réunion administrative
 
 Réservé aux adhérent·e·s et invité·e·s
 
@@ -253,11 +312,10 @@ Une fois par mois, le conseil d'administration (CA) de l'ALDIL se réunit pour f
 C'est aussi un moment propice pour inviter d'éventuels partenaires ou futurs adhérents à nous rencontrer.
 
 A distance avec BigBlueButton (lien fourni aux membres et aux invité•e•s).`,
-        start: new Date('2025-03-27T17:30:00.000Z'),
-        end: new Date('2025-03-27T19:00:00.000Z'),
-        url: 'https://www.aldil.org/events/reunion-du-ca-44/',
-        location: null,
-        geo: null,
+          url: 'https://www.aldil.org/events/reunion-du-ca-44/',
+          location: null,
+          geo: null,
+        }
       },
     ]);
   });
