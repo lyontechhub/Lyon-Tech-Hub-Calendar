@@ -50,6 +50,16 @@ function tryToExtractGeo(event: VEvent): Geo | null {
   throw new Error(`Invalid geo for event ${event.uid} => ${event.geo}`);
 }
 
+function extractEventData(event: ical.VEvent): EventData {
+  return {
+    title: event.summary,
+    description: event.description || '',
+    url: tryToExtractUrl(event),
+    location: event.location || null,
+    geo: tryToExtractGeo(event),
+  };
+}
+
 const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
   if(event.rrule) {
     const excludeDates = Object.values(event.exdate)
@@ -80,13 +90,7 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
           const duration = dateFns.differenceInMilliseconds(event.end, event.start)
           return { start, end: dateFns.addMilliseconds(start, duration) }
         }),
-      data: {
-        title: event.summary,
-        description: event.description || '',
-        url: tryToExtractUrl(event),
-        location: event.location || null,
-        geo: tryToExtractGeo(event),
-      }
+      data: extractEventData(event),
     }
   }
 
@@ -95,13 +99,7 @@ const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
     id: event.uid,
     start: event.start,
     end: event.end,
-    data: {
-      title: event.summary,
-      description: event.description || '',
-      url: tryToExtractUrl(event),
-      location: event.location || null,
-      geo: tryToExtractGeo(event),
-    },
+    data: extractEventData(event),
   }
 }
 
