@@ -1,0 +1,101 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//wp-events-plugin.com//6.6.3//EN
+TZID:Europe/Paris
+X-WR-TIMEZONE:Europe/Paris
+BEGIN:VEVENT
+UID:630@aldil.org
+DTSTART;TZID=Europe/Paris:20250318T183000
+DTEND;TZID=Europe/Paris:20250318T200000
+DTSTAMP:20250227T181216Z
+URL:https://www.aldil.org/events/reunion-du-ca-48/
+SUMMARY:Réunion du CA
+DESCRIPTION:Réunion administrative\n\nRéservé aux adhérent·e·s et inv
+ ité·e·s\n\nRéunion intermédiaire. (à confirmer)\n\nA distance avec B
+ igBlueButton (lien fourni aux membres et aux invité•e•s).
+ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2018/11
+ /ALDIL_only_R2.png
+CATEGORIES:Réunion
+END:VEVENT
+BEGIN:VEVENT
+UID:592@aldil.org
+DTSTART;TZID=Europe/Paris:20250320T190000
+DTEND;TZID=Europe/Paris:20250320T210000
+DTSTAMP:20250202T193113Z
+URL:https://www.aldil.org/events/jeudi-du-graphisme-2025-03/
+SUMMARY:Jeudi du graphisme : Illustrations personnalisables
+DESCRIPTION:Illustrer vos supports visuels avec des mises en scène sur mes
+ ure\n\nComment optimiser l'utilisation du site undraw.co pour trouver des
+ illustrations personnalisables directement sur le site ou encore plus subt
+ ilement avec Inkscape.\nGRATUIT\n\nAtelier animé les étudiant•e•s de
+  la Licence Colibre\, partenaire de l'ALDIL.\n\n\n
+ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2018/10
+ /colibre.jpg
+CATEGORIES:Atelier,Graphisme
+LOCATION:Maison pour tous / Salle des Rancy\, 249 rue Vendôme\, LYON\, 690
+ 03\, Auvergne-Rhône-Alpes\, France
+GEO:45.7559745;4.8477739
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=249 rue Vendôme\, LYON\, 6
+ 9003\, Auvergne-Rhône-Alpes\, France;X-APPLE-RADIUS=100;X-TITLE=Maison po
+ ur tous / Salle des Rancy:geo:45.7559745,4.8477739
+END:VEVENT
+BEGIN:VEVENT
+UID:628@aldil.org
+DTSTART;TZID=Europe/Paris:20250321T100000
+DTEND;TZID=Europe/Paris:20250323T200000
+DTSTAMP:20250309T220455Z
+URL:https://www.aldil.org/events/salon-primevere-3/
+SUMMARY:Salon Primevère
+DESCRIPTION:Comme chaque année\, l’ALDIL sera présente sur l’espace N
+ umérique Libre du salon Primevère pour faire connaitre les logiciels lib
+ res par l'échange sur le stand et par les conférences proposées tout au
+  long du salon.\n\nOUVERTURE\nVendredi 11h - 21h\nSamedi 10h - 20h\nDimanc
+ he 10h - 18h\n\n\n\nLe programme du pôle numérique de #PrimevereSalon 20
+ 25 est en ligne : https://www.salonprimevere.org/programmation/theme/numer
+ ique\n\nPas de tente de conférence dédiée cette année\, mais des inter
+ ventions tout de même. Notamment de @Framasoft.\n\n\n\n&nbsp\;\n\nPlus d'
+ infos sur https://www.salonprimevere.org/
+ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2024/02
+ /primevere-2024.png
+CATEGORIES:Primevère,Salon - Convention
+LOCATION:EUREXPO LYON\, Boulevard de l'Europe\, CHASSIEU\, 69680\, Auvergne
+ -Rhône-Alpes\, France
+GEO:45.7318991;4.9481330
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=Boulevard de l'Europe\, CHA
+ SSIEU\, 69680\, Auvergne-Rhône-Alpes\, France;X-APPLE-RADIUS=100;X-TITLE=
+ EUREXPO LYON:geo:45.7318991,4.9481330
+END:VEVENT
+BEGIN:VEVENT
+UID:606@aldil.org
+DTSTART;TZID=Europe/Paris:20250327T183000
+DTEND;TZID=Europe/Paris:20250327T200000
+DTSTAMP:20240926T190211Z
+URL:https://www.aldil.org/events/reunion-du-ca-44/
+SUMMARY:Réunion du CA
+DESCRIPTION:Réunion administrative\n\nRéservé aux adhérent·e·s et inv
+ ité·e·s\n\nUne fois par mois\, le conseil d'administration (CA) de l'AL
+ DIL se réunit pour faire le bilan des activités passées et préparer ce
+ lles à venir.\nC'est aussi un moment propice pour inviter d'éventuels pa
+ rtenaires ou futurs adhérents à nous rencontrer.\n\nA distance avec BigB
+ lueButton (lien fourni aux membres et aux invité•e•s).
+ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2018/11
+ /ALDIL_only_R2.png
+CATEGORIES:Réunion
+END:VEVENT
+BEGIN:VTIMEZONE
+TZID:Europe/Paris
+X-LIC-LOCATION:Europe/Paris
+BEGIN:STANDARD
+DTSTART:20241027T020000
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:20250330T030000
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+END:DAYLIGHT
+END:VTIMEZONE
+END:VCALENDAR
