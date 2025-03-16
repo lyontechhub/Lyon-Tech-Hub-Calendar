@@ -1,58 +1,58 @@
-import * as ical from 'node-ical';
-import { VEvent } from 'node-ical';
 import { describe, it, expect } from 'vitest';
 
 import { toCalendarEvent } from './IcsCalendarEvent';
-
-function makeVEvent(body: string) {
-  const icalEvents = Object.values(ical.sync.parseICS(body));
-  const vEvent = icalEvents.at(0) as VEvent;
-  return vEvent;
-}
+import { Event } from './IcsParser';
 
 describe('IcsCalendarEvent', () => {
   it('should convert minimal event to CalendarEvent', () => {
-    const vEvent = makeVEvent(`
-BEGIN:VEVENT
-SUMMARY:Title
-UID:901AC34F-5C83-4ACC-8619-95C9CE39DF95
-DTSTART:20240101T000000Z
-DTEND:20240101T010000Z
-END:VEVENT
-    `);
+    const event: Event = {
+      type: 'single',
+      id: 'idA',
+      date: { start: new Date('2024-01-01T00:00:00.000Z'), end: new Date('2024-01-01T01:00:00.000Z') },
+      data: {
+        title: 'Title',
+        description: ``,
+        url: null,
+        location: null,
+        geo: null,
+      }
+    };
 
-    const calendarEvent = toCalendarEvent('minimal')(vEvent);
+    const calendarEvent = toCalendarEvent('minimal')(event);
 
     expect(calendarEvent.fullTitle.get).toBe('[minimal] Title');
-    expect(calendarEvent.id).toBe('minimal-901AC34F-5C83-4ACC-8619-95C9CE39DF95');
+    expect(calendarEvent.id).toBe('minimal-idA');
     expect(calendarEvent.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
     expect(calendarEvent.date.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
+    expect(calendarEvent.description).toEqual('');
     expect(calendarEvent.address).toBeUndefined();
+    expect(calendarEvent.geo).toBeUndefined();
+    expect(calendarEvent.url).toBeUndefined();
   });
 
   it('should convert full event to CalendarEvent', () => {
-    const vEvent = makeVEvent(`
-BEGIN:VEVENT
-SUMMARY:Title
-UID:901AC34F-5C83-4ACC-8619-95C9CE39DF95
-DTSTART:20240101T000000Z
-DTEND:20240101T010000Z
-LOCATION:26 Rue Montorgueil 75001 Paris
-DESCRIPTION:Lorem ipsum dolor sit amet\\, consectetur adipiscing elit. Donec i
- d commodo nulla. Aenean suscipit urna nec enim imperdiet\\, id vulputate er
- os facilisis.
-END:VEVENT
-    `);
+    const event: Event = {
+      type: 'single',
+      id: '901AC34F-5C83-4ACC-8619-95C9CE39DF95',
+      date: { start: new Date('2024-01-01T00:00:00.000Z'), end: new Date('2024-01-01T01:00:00.000Z') },
+      data: {
+        title: 'Title',
+        description: `Comme chaque année`,
+        url: 'https://www.example.com',
+        location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
+        geo: { lat: 45.7318991, lon: 4.9481330 },
+      }
+    };
 
-    const calendarEvent = toCalendarEvent('full')(vEvent);
+    const calendarEvent = toCalendarEvent('full')(event);
 
     expect(calendarEvent.fullTitle.get).toBe('[full] Title');
     expect(calendarEvent.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95');
     expect(calendarEvent.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
     expect(calendarEvent.date.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
-    expect(calendarEvent.description).toEqual(
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id commodo nulla. Aenean suscipit urna nec enim imperdiet, id vulputate eros facilisis.',
-    );
-    expect(calendarEvent.address).toBe('26 Rue Montorgueil 75001 Paris');
+    expect(calendarEvent.description).toEqual('Comme chaque année');
+    expect(calendarEvent.address).toBe('EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France');
+    expect(calendarEvent.geo).toStrictEqual({ lat: 45.7318991, lon: 4.9481330 });
+    expect(calendarEvent.url).toBe('https://www.example.com');
   });
 });

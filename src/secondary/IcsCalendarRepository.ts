@@ -1,14 +1,11 @@
-import * as ical from 'node-ical';
-import { VEvent } from 'node-ical';
-
 import { Calendar } from '../domain/Calendar';
 import { CalendarRepository } from '../domain/CalendarRepository';
 
 import { toCalendarEvent } from './IcsCalendarEvent';
+import { parse } from './IcsParser';
 
 const icalToCalendarEvent = (group: string, text: string): Calendar => {
-  const events = ical.sync.parseICS(text);
-  const calendarEvents = Object.values(events).filter((event) => event.type === 'VEVENT') as VEvent[];
+  const calendarEvents = parse(text, new Date());
   return calendarEvents.map(toCalendarEvent(group));
 };
 

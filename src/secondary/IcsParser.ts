@@ -20,12 +20,12 @@ export type SingleEvent = {
 export type EventData = {
   title: string
   description: string
-  url: String | null
+  url: string | null
   location: string | null
   geo: Geo | null
 }
 
-function tryToExtractUrl(event: VEvent): String | null {
+function tryToExtractUrl(event: VEvent): string | null {
   const url = event.url as any
   if(url === null || url === undefined) return null;
   if(typeof url == 'string') return url;
