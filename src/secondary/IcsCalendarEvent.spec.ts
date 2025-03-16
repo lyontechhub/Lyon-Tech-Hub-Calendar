@@ -90,12 +90,12 @@ describe('IcsCalendarEvent', () => {
     });
 
     const calendarEvent1 = calendarEvents[0]
-    expect(calendarEvent1.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95-2024-01-01T01:00:00+01:00');
+    expect(calendarEvent1.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95-2024-01-01');
     expect(calendarEvent1.date.start).toEqual(new Date('2024-01-01T00:00:00.000Z'));
     expect(calendarEvent1.date.end).toEqual(new Date('2024-01-01T01:00:00.000Z'));
 
     const calendarEvent2 = calendarEvents[1]
-    expect(calendarEvent2.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95-2024-01-03T01:00:00+01:00');
+    expect(calendarEvent2.id).toBe('full-901AC34F-5C83-4ACC-8619-95C9CE39DF95-2024-01-03');
     expect(calendarEvent2.date.start).toEqual(new Date('2024-01-03T00:00:00.000Z'));
     expect(calendarEvent2.date.end).toEqual(new Date('2024-01-03T01:00:00.000Z'));
   });
