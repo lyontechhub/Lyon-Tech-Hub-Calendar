@@ -13,6 +13,6 @@ calendarGenerator(JSON.parse(config))
     return process.exit(0);
   })
   .catch((error) => {
-    console.error('Something goes wrong:', error.message);
+    console.error('Something goes wrong:', error);
     return process.exit(1);
   });
