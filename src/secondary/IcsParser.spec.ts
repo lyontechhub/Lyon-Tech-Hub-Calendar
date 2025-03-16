@@ -1,12 +1,13 @@
-import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { describe, it, expect } from 'vitest';
+
 import { parse, SingleEvent } from './IcsParser';
 
-const getSample = (name: string): string => fs.readFileSync(path.resolve(__dirname, 'samples', name + '.ics'), 'utf-8')
+const getSample = (name: string): string => fs.readFileSync(path.resolve(__dirname, 'samples', name + '.ics'), 'utf-8');
 
-let now = new Date()
+const now = new Date();
 
 describe('IcsParser.parse should', () => {
   it('extract standard event', () => {
@@ -42,7 +43,7 @@ TZOFFSETTO:+0200
 TZNAME:CEST
 END:DAYLIGHT
 END:VTIMEZONE
-END:VCALENDAR`
+END:VCALENDAR`;
 
     const calendarEvent = parse(content, now);
 
@@ -59,8 +60,8 @@ END:VCALENDAR`
           url: null,
           location: null,
           geo: null,
-        }
-      }
+        },
+      },
     ]);
   });
 
@@ -77,7 +78,7 @@ DESCRIPTION:Réunion administrative
 ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2018/11
  /ALDIL_only_R2.png
 CATEGORIES:Réunion
-END:VEVENT`
+END:VEVENT`;
 
     const calendarEvent = parse(content, now);
 
@@ -92,8 +93,8 @@ END:VEVENT`
           url: 'https://www.aldil.org/events/reunion-du-ca-44/',
           location: null,
           geo: null,
-        }
-      }
+        },
+      },
     ]);
   });
 
@@ -113,7 +114,7 @@ STATUS:CONFIRMED
 CREATED:20250311T175449Z
 LAST-MODIFIED:20250311T175449Z
 CLASS:PUBLIC
-END:VEVENT`
+END:VEVENT`;
 
     const calendarEvent = parse(content, now);
 
@@ -128,8 +129,8 @@ END:VEVENT`
           url: 'https://www.meetup.com/software-craftsmanship-lyon/events/306666704/',
           location: null,
           geo: null,
-        }
-      }
+        },
+      },
     ]);
   });
 
@@ -159,8 +160,8 @@ BEGIN:VALARM
 ACTION:NONE
 TRIGGER;VALUE=DATE-TIME:19760401T005545Z
 END:VALARM
-END:VEVENT`
-    const now = new Date(2025, 1, 2)
+END:VEVENT`;
+    const now = new Date(2025, 1, 2);
 
     const calendarEvent = parse(content, now);
 
@@ -194,8 +195,8 @@ END:VEVENT`
           url: null,
           location: null,
           geo: null,
-        }
-      }
+        },
+      },
     ]);
   });
 
@@ -212,13 +213,13 @@ DESCRIPTION:Comme chaque année
 ATTACH;FMTTYPE=image/jpeg:https://www.aldil.org/wp-content/uploads/2024/02
  /primevere-2024.png
 CATEGORIES:Primevère,Salon - Convention
-LOCATION:EUREXPO LYON\, Boulevard de l'Europe\, CHASSIEU\, 69680\, Auvergne
- -Rhône-Alpes\, France
+LOCATION:EUREXPO LYON\\, Boulevard de l'Europe\\, CHASSIEU\\, 69680\\, Auvergne
+ -Rhône-Alpes\\, France
 GEO:45.7318991;4.9481330
-X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=Boulevard de l'Europe\, CHA
- SSIEU\, 69680\, Auvergne-Rhône-Alpes\, France;X-APPLE-RADIUS=100;X-TITLE=
+X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-ADDRESS=Boulevard de l'Europe\\, CHA
+ SSIEU\\, 69680\\, Auvergne-Rhône-Alpes\\, France;X-APPLE-RADIUS=100;X-TITLE=
  EUREXPO LYON:geo:45.7318991,4.9481330
-END:VEVENT`
+END:VEVENT`;
 
     const calendarEvent = parse(content, now);
 
@@ -231,10 +232,10 @@ END:VEVENT`
           title: 'Salon Primevère',
           description: `Comme chaque année`,
           url: 'https://www.aldil.org/events/salon-primevere-3/',
-          location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
-          geo: { lat: 45.7318991, lon: 4.9481330 },
-        }
-      }
+          location: "EUREXPO LYON, Boulevard de l'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France",
+          geo: { lat: 45.7318991, lon: 4.948133 },
+        },
+      },
     ]);
   });
 
@@ -249,21 +250,24 @@ CREATED:20240314T080647Z
 DESCRIPTION:https://www.helloasso.com/associations/hackyourjob-community-ly
  on/evenements/unconf-avril-2024
 LAST-MODIFIED:20240314T080647Z
-LOCATION:L'augusterie\, 39 rue Alexandre Boutin 69100 Villeurbanne
+LOCATION:L'augusterie\\, 39 rue Alexandre Boutin 69100 Villeurbanne
 SEQUENCE:0
 STATUS:CONFIRMED
 SUMMARY:[HYJ] Unconf avril 2024
 TRANSP:TRANSPARENT
-END:VEVENT`
+END:VEVENT`;
 
     const calendarEvent = parse(content, now);
 
-    expect((calendarEvent[0] as SingleEvent).date).toStrictEqual({ start: { year: 2024, month: 4, day: 9 }, end: { year: 2024, month: 4, day: 9 } });
-  })
+    expect((calendarEvent[0] as SingleEvent).date).toStrictEqual({
+      start: { year: 2024, month: 4, day: 9 },
+      end: { year: 2024, month: 4, day: 9 },
+    });
+  });
 
   it('extract events of google', () => {
-    const content = getSample('google')
-    const now = new Date(2025, 1, 2)
+    const content = getSample('google');
+    const now = new Date(2025, 1, 2);
 
     const calendarEvent = parse(content, now);
 
@@ -286,7 +290,8 @@ END:VEVENT`
         date: { start: new Date('2024-03-25T18:00:00.000Z'), end: new Date('2024-03-25T20:00:00.000Z') },
         data: {
           title: '[SwCrafters] [CraftTalk] Le TDD : du Kata à la Production',
-          description: 'For full details, including the address, and to RSVP see: https://www.meetup.com/fr-FR/software-craftsmanship-lyon/events/299402173',
+          description:
+            'For full details, including the address, and to RSVP see: https://www.meetup.com/fr-FR/software-craftsmanship-lyon/events/299402173',
           url: null,
           location: `L'augusterie, 39 Rue Alexandre Boutin · Villeurbanne`,
           geo: null,
@@ -309,7 +314,7 @@ END:VEVENT`
           url: null,
           location: null,
           geo: null,
-        }
+        },
       },
       {
         type: 'recurrent',
@@ -340,13 +345,13 @@ END:VEVENT`
           url: null,
           location: null,
           geo: null,
-        }
+        },
       },
     ]);
   });
 
   it('extract events of meetup', () => {
-    const content = getSample('meetup')
+    const content = getSample('meetup');
 
     const calendarEvent = parse(content, now);
 
@@ -363,7 +368,7 @@ END:VEVENT`
           url: 'https://www.meetup.com/software-craftsmanship-lyon/events/306666704/',
           location: null,
           geo: null,
-        }
+        },
       },
       {
         type: 'single',
@@ -375,13 +380,13 @@ END:VEVENT`
           url: 'https://www.meetup.com/afup-lyon-php/events/306104038/',
           location: null,
           geo: null,
-        }
+        },
       },
     ]);
   });
 
   it('extract events of wordpress', () => {
-    const content = getSample('wordpress')
+    const content = getSample('wordpress');
 
     const calendarEvent = parse(content, now);
 
@@ -402,7 +407,7 @@ A distance avec BigBlueButton (lien fourni aux membres et aux invité•e•s).`
           url: 'https://www.aldil.org/events/reunion-du-ca-48/',
           location: null,
           geo: null,
-        }
+        },
       },
       {
         type: 'single',
@@ -422,7 +427,7 @@ Atelier animé les étudiant•e•s de la Licence Colibre, partenaire de l'ALDI
           url: 'https://www.aldil.org/events/jeudi-du-graphisme-2025-03/',
           location: 'Maison pour tous / Salle des Rancy, 249 rue Vendôme, LYON, 69003, Auvergne-Rhône-Alpes, France',
           geo: { lat: 45.7559745, lon: 4.8477739 },
-        }
+        },
       },
       {
         type: 'single',
@@ -449,9 +454,9 @@ Pas de tente de conférence dédiée cette année, mais des interventions tout d
 
 Plus d'infos sur https://www.salonprimevere.org/`,
           url: 'https://www.aldil.org/events/salon-primevere-3/',
-          location: 'EUREXPO LYON, Boulevard de l\'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France',
-          geo: { lat: 45.7318991, lon: 4.9481330 },
-        }
+          location: "EUREXPO LYON, Boulevard de l'Europe, CHASSIEU, 69680, Auvergne-Rhône-Alpes, France",
+          geo: { lat: 45.7318991, lon: 4.948133 },
+        },
       },
       {
         type: 'single',
@@ -470,7 +475,7 @@ A distance avec BigBlueButton (lien fourni aux membres et aux invité•e•s).`
           url: 'https://www.aldil.org/events/reunion-du-ca-44/',
           location: null,
           geo: null,
-        }
+        },
       },
     ]);
   });

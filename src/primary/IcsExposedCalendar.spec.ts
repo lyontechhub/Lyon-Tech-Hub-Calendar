@@ -44,7 +44,7 @@ describe('IcsExposedCalendar', () => {
     const exposedCalendar = await toIcsExposedCalendar([
       CalendarEvent.of({
         id: 'IdA',
-        date: { start: { year: 2024, month: 2, day: 3}, end: { year: 2024, month: 2, day: 3} },
+        date: { start: { year: 2024, month: 2, day: 3 }, end: { year: 2024, month: 2, day: 3 } },
         title: Name.of('Exposed title'),
         group: Name.of('full'),
         description: 'Description',

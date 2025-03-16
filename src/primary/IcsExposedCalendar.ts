@@ -17,11 +17,11 @@ const fromEventAttributesToIcsExposedCalendar = (events: EventAttributes[]): Pro
   );
 
 const convertDate = (date: Date | DateOnly, end: boolean): ics.DateTime => {
-  if(date instanceof Date) {
-    return date.getTime()
+  if (date instanceof Date) {
+    return date.getTime();
   }
-  return [date.year, date.month, date.day + (end ? 1 : 0)]
-}
+  return [date.year, date.month, date.day + (end ? 1 : 0)];
+};
 
 const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes => ({
   productId: 'lyontechhub/ics',
