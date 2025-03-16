@@ -1,8 +1,21 @@
 import * as ical from 'node-ical';
 import { VEvent } from 'node-ical';
+import * as dateFns from 'date-fns';
+import { getTimezoneOffset } from 'date-fns-tz';
 
+type Event = RecurrentEvent | SingleEvent
+type RecurrentEvent = {
+  type: 'recurrent'
+  id: string
+  dates: RecurrentEventDate[]
+  data: EventData
+}
+type RecurrentEventDate = {
+  start: Date
+  end: Date
+}
 type SingleEvent = {
-  type: string
+  type: 'single'
   id: string
   start: Date
   end: Date
@@ -37,8 +50,47 @@ function formatGeo(event: VEvent): Geo | null {
   throw new Error(`Invalid geo for event ${event.uid} => ${event.geo}`);
 }
 
-const parseEvent = (event: VEvent): SingleEvent[] => {
-  return [{
+const parseEvent = (limitMax: Date) => (event: VEvent): Event => {
+  if(event.rrule) {
+    const excludeDates = Object.values(event.exdate)
+    const rrule = event.rrule
+    const fixDate = (date: Date) => {
+      // Fix to correct the time according to the timezone documented in the libs readme. The question is why doesn't the libs do this directly??
+      if (rrule.origOptions.tzid) {
+        const tz = rrule.origOptions.tzid
+        const computeOffset = getTimezoneOffset(tz, date);
+        const originOffset = getTimezoneOffset(tz, event.start);
+
+        const deltaOffset = computeOffset - originOffset;
+
+        return dateFns.addMilliseconds(date, -deltaOffset)
+      } else {
+        return dateFns.addHours(date, date.getHours() - ((event.start.getTimezoneOffset() - date.getTimezoneOffset()) / 60))
+      }
+    }
+    return {
+      type: 'recurrent',
+      id: event.uid,
+      dates:
+        event.rrule
+        .between(dateFns.addDays(event.start, -1), limitMax)
+        .filter(d => !excludeDates.some(exclude => dateFns.isEqual(d, exclude as Date)))
+        .map(date => {
+          const start = fixDate(date)
+          const duration = dateFns.differenceInMilliseconds(event.end, event.start)
+          return { start, end: dateFns.addMilliseconds(start, duration) }
+        }),
+      data: {
+        title: event.summary,
+        description: event.description,
+        url: formatUrl(event),
+        location: event.location || null,
+        geo: formatGeo(event),
+      }
+    }
+  }
+
+  return {
     type: 'single',
     id: event.uid,
     start: event.start,
@@ -50,12 +102,13 @@ const parseEvent = (event: VEvent): SingleEvent[] => {
       location: event.location || null,
       geo: formatGeo(event),
     },
-  }]
+  }
 }
 
 export function parse(content: string, now: Date) {
   const calendar = ical.sync.parseICS(content)
   const events = Object.values(calendar).filter((event) => event.type === 'VEVENT') as VEvent[]
 
-  return events.flatMap(parseEvent)
+  const limitMax = dateFns.addYears(now, 1)
+  return events.map(parseEvent(limitMax))
 }
