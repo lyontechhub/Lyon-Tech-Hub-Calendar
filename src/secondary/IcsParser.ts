@@ -76,16 +76,10 @@ const parseEvent =
         // Fix to correct the time according to the timezone documented in the libs readme. The question is why doesn't the libs do this directly??
         if (rrule.origOptions.tzid) {
           const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-          const tz = rrule.origOptions.tzid;
 
           const localComputeTimezoneOffset = getTimezoneOffset(localTimezone, date);
-          const computeOffset = getTimezoneOffset(tz, date);
-          const originOffset = getTimezoneOffset(tz, event.start);
 
-          const deltaOffsetTimezoneError = computeOffset - localComputeTimezoneOffset;
-          const deltaOffsetOfOrigin = computeOffset - originOffset;
-
-          const deltaOffset = deltaOffsetOfOrigin - deltaOffsetTimezoneError;
+          const deltaOffset = localComputeTimezoneOffset;
           return dateFns.addMilliseconds(date, -deltaOffset);
         } else {
           return dateFns.addHours(date, date.getHours() - (event.start.getTimezoneOffset() - date.getTimezoneOffset()) / 60);
