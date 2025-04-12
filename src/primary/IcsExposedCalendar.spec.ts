@@ -30,6 +30,8 @@ describe('IcsExposedCalendar', () => {
         group: Name.of('full'),
         description: 'Description',
         address: '22 Rue Delambre 75014 Paris',
+        geo: { lat: 86.5, lon: 10.6 },
+        url: 'https://example.com',
       }),
     ]);
 
@@ -38,6 +40,8 @@ describe('IcsExposedCalendar', () => {
     expect(exposedCalendar).toContain('DTEND:20240202T130000Z');
     expect(exposedCalendar).toContain('LOCATION:22 Rue Delambre 75014 Paris');
     expect(exposedCalendar).toContain('DESCRIPTION:Description');
+    expect(exposedCalendar).toContain('GEO:86.5;10.6');
+    expect(exposedCalendar).toContain('URL:https://example.com');
   });
 
   it('should convert full day event to ICS', async () => {

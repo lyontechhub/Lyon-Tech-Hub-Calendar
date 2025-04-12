@@ -30,6 +30,8 @@ const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes => ({
   end: convertDate(calendarEvent.date.end, true),
   location: calendarEvent.address,
   description: calendarEvent.description,
+  geo: calendarEvent.geo,
+  url: calendarEvent.url,
 });
 
 const toEventAttributesList = (calendar: Calendar): EventAttributes[] => calendar.map(toEventAttributes);
