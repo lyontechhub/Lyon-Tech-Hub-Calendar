@@ -16,12 +16,12 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js LTS
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - name: Use Node.js 22.17.1
+        uses: actions/setup-node@v5
         with:
           cache: 'npm'
-          node-version: 'lts/*'
+          node-version: '22.17.1'
           registry-url: 'https://registry.npmjs.org'
       - run: |
           npm ci
@@ -36,12 +36,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: github-pages
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js LTS
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - name: Use Node.js 22.17.1
+        uses: actions/setup-node@v5
         with:
           cache: 'npm'
-          node-version: 'lts/*'
+          node-version: '22.17.1'
           registry-url: 'https://registry.npmjs.org'
       - run: |
           npm ci
