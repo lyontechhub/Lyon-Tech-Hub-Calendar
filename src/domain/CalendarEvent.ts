@@ -50,6 +50,19 @@ export class CalendarEvent {
     return Name.of(`[${this.#group.get}] ${this.#title.get}`);
   }
 
+  toBuilder(): CalendarEventBuilder {
+    return {
+      id: this.id,
+      title: this.#title,
+      group: this.#group,
+      date: this.date,
+      description: this.description,
+      address: this.address,
+      geo: this.geo,
+      url: this.url,
+    }
+  }
+
   static of(builder: CalendarEventBuilder) {
     return new CalendarEvent(builder);
   }
