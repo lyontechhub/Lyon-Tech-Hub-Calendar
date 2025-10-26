@@ -59,4 +59,40 @@ describe('IcsExposedCalendar', () => {
     expect(exposedCalendar).toContain('DTSTART;VALUE=DATE:20240203');
     expect(exposedCalendar).toContain('DTEND;VALUE=DATE:20240204');
   });
+
+  it('should be idempotence', async () => {
+    const calendar = [
+      CalendarEvent.of({
+        id: 'IdA',
+        date: { start: { year: 2024, month: 2, day: 3 }, end: { year: 2024, month: 2, day: 3 } },
+        title: Name.of('Exposed title'),
+        group: Name.of('full'),
+        description: 'Description',
+        address: '22 Rue Delambre 75014 Paris',
+        createdAt: new Date('2025-05-06T12:23:34Z'),
+      }),
+    ];
+
+    const exposedCalendar1 = await toIcsExposedCalendar(calendar);
+    const exposedCalendar2 = await toIcsExposedCalendar(calendar);
+
+    expect(exposedCalendar1).toEqual(exposedCalendar2);
+  });
+
+  it('should use updatedAt as timestamp', async () => {
+    const calendar = [
+      CalendarEvent.of({
+        id: 'IdA',
+        date: { start: { year: 2024, month: 2, day: 3 }, end: { year: 2024, month: 2, day: 3 } },
+        title: Name.of('Exposed title'),
+        group: Name.of('full'),
+        createdAt: new Date('2025-05-06T12:23:34Z'),
+        updatedAt: new Date('2025-05-06T13:23:34Z'),
+      }),
+    ];
+
+    const exposedCalendar = await toIcsExposedCalendar(calendar);
+
+    expect(exposedCalendar).toContain('DTSTAMP:20250506T132334Z');
+  });
 });

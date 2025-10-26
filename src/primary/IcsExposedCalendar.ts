@@ -23,8 +23,9 @@ const convertDate = (date: Date | DateOnly, end: boolean): ics.DateTime => {
   return [date.year, date.month, date.day + (end ? 1 : 0)];
 };
 
-const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes => ({
+const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes & { timestamp?: ics.DateTime } => ({
   productId: 'lyontechhub/ics',
+  uid: calendarEvent.id,
   title: calendarEvent.fullTitle.get,
   start: convertDate(calendarEvent.date.start, false),
   end: convertDate(calendarEvent.date.end, true),
@@ -32,6 +33,9 @@ const toEventAttributes = (calendarEvent: CalendarEvent): EventAttributes => ({
   description: calendarEvent.description,
   geo: calendarEvent.geo,
   url: calendarEvent.url,
+  created: calendarEvent.createdAt ? convertDate(calendarEvent.createdAt, false) : undefined,
+  lastModified: calendarEvent.updatedAt ? convertDate(calendarEvent.updatedAt, false) : undefined,
+  timestamp: calendarEvent.createdAt ? convertDate(calendarEvent.updatedAt ?? calendarEvent.createdAt, false) : undefined,
 });
 
 const toEventAttributesList = (calendar: Calendar): EventAttributes[] => calendar.map(toEventAttributes);
