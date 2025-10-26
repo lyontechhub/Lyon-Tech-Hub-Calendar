@@ -15,9 +15,9 @@ export interface EventDto {
   updatedAt?: string;
 }
 interface IntervalDto {
-  kind: string
-  start: string | DateOnly
-  end: string | DateOnly
+  kind: string;
+  start: string | DateOnly;
+  end: string | DateOnly;
 }
 
 function serializeInterval(value: Interval): IntervalDto {
@@ -25,10 +25,10 @@ function serializeInterval(value: Interval): IntervalDto {
     kind: value.start instanceof Date ? 'IntervalDateTime' : 'IntervalDateOnly',
     start: value.start instanceof Date ? value.start.toISOString() : value.start,
     end: value.end instanceof Date ? value.end.toISOString() : value.end,
-  }
+  };
 }
 function deserializeInterval(value: IntervalDto): Interval {
-  if(value.kind === 'IntervalDateOnly') {
+  if (value.kind === 'IntervalDateOnly') {
     return { start: value.start, end: value.end } as IntervalDateOnly;
   } else {
     return { start: new Date(value.start as string), end: new Date(value.end as string) } as IntervalDateTime;
@@ -36,8 +36,8 @@ function deserializeInterval(value: IntervalDto): Interval {
 }
 
 export function serialize(calendar: Calendar): EventDto[] {
-  return calendar.map(e => {
-    const builder = e.toBuilder()
+  return calendar.map((e) => {
+    const builder = e.toBuilder();
     return {
       id: e.id,
       title: builder.title.get,
@@ -49,11 +49,11 @@ export function serialize(calendar: Calendar): EventDto[] {
       url: builder.url,
       createdAt: builder.createdAt?.toISOString(),
       updatedAt: builder.updatedAt?.toISOString(),
-    }
-  })
+    };
+  });
 }
 export function deserialize(calendar: EventDto[]): Calendar {
-  return calendar.map(dto => {
+  return calendar.map((dto) => {
     return CalendarEvent.of({
       id: dto.id,
       title: Name.of(dto.title),
@@ -65,6 +65,6 @@ export function deserialize(calendar: EventDto[]): Calendar {
       url: dto.url,
       createdAt: dto.createdAt ? new Date(dto.createdAt) : undefined,
       updatedAt: dto.updatedAt ? new Date(dto.updatedAt) : undefined,
-    })
-  })
+    });
+  });
 }

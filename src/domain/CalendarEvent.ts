@@ -68,7 +68,7 @@ export class CalendarEvent {
       url: this.url,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-    }
+    };
   }
 
   static of(builder: CalendarEventBuilder) {

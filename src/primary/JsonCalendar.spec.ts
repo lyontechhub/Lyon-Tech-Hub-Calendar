@@ -12,8 +12,8 @@ const sample = [
     title: Name.of('Exposed title'),
     group: Name.of('minimal'),
     description: 'blabal bla',
-    address: '15 rue de l\'arbre',
-    geo: {lat: 12.256, lon: 5.123},
+    address: "15 rue de l'arbre",
+    geo: { lat: 12.256, lon: 5.123 },
     url: 'https://example.com',
   }),
   CalendarEvent.of({
@@ -22,7 +22,7 @@ const sample = [
     title: Name.of('Exposed title'),
     group: Name.of('minimal'),
   }),
-]
+];
 
 describe('JsonCalendar', () => {
   it('should serialize and deserialize', async () => {
