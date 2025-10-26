@@ -25,6 +25,8 @@ const makeFull = () =>
     address: 'Address',
     geo: { lat: 86.5, lon: 10.6 },
     url: 'https://example.com',
+    createdAt: new Date('2025-05-06T12:23:34Z'),
+    updatedAt: new Date('2025-05-07T12:23:34Z'),
   });
 
 describe('CalendarEvent', () => {
@@ -44,5 +46,7 @@ describe('CalendarEvent', () => {
     expect(full.address).toBe('Address');
     expect(full.geo).toStrictEqual({ lat: 86.5, lon: 10.6 });
     expect(full.url).toBe('https://example.com');
+    expect(full.createdAt.toISOString()).toBe('2025-05-06T12:23:34.000Z');
+    expect(full.updatedAt.toISOString()).toBe('2025-05-07T12:23:34.000Z');
   });
 });

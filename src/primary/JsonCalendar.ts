@@ -11,6 +11,8 @@ export interface EventDto {
   address?: string;
   geo?: Geo;
   url?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 interface IntervalDto {
   kind: string
@@ -45,6 +47,8 @@ export function serialize(calendar: Calendar): EventDto[] {
       address: builder.address,
       geo: builder.geo,
       url: builder.url,
+      createdAt: builder.createdAt?.toISOString(),
+      updatedAt: builder.updatedAt?.toISOString(),
     }
   })
 }
@@ -59,6 +63,8 @@ export function deserialize(calendar: EventDto[]): Calendar {
       address: dto.address,
       geo: dto.geo,
       url: dto.url,
+      createdAt: dto.createdAt ? new Date(dto.createdAt) : undefined,
+      updatedAt: dto.updatedAt ? new Date(dto.updatedAt) : undefined,
     })
   })
 }
