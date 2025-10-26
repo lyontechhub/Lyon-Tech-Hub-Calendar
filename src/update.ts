@@ -1,3 +1,4 @@
+import { serialize } from './primary/JsonCalendar';
 import { IcsCalendarRepository } from './secondary/IcsCalendarRepository';
 
 const config = process.argv.at(2);
@@ -11,7 +12,7 @@ const icsCalendarRepository = new IcsCalendarRepository(JSON.parse(config));
 icsCalendarRepository
   .get()
   .then((events) => {
-    console.log(JSON.stringify(events));
+    console.log(JSON.stringify(serialize(events)));
     return process.exit(0);
   })
   .catch((error) => {
