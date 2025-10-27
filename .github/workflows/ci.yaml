@@ -29,7 +29,8 @@ jobs:
           npm run lint
           npm run format
           mkdir -p dist
-          npx tsx src/main.ts "$(cat calendars.json)" > dist/calendar.ics
+          npx tsx src/update.ts "$(cat calendars.json)" > dist/calendar.json
+          npx tsx src/export.ts "dist/calendar.json" > dist/calendar.ics
 
   build:
     if: github.ref == 'refs/heads/main'
