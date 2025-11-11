@@ -71,6 +71,10 @@ export class CalendarEvent {
     };
   }
 
+  get title(): Name {
+    return this.#title;
+  }
+
   static of(builder: CalendarEventBuilder) {
     return new CalendarEvent(builder);
   }
