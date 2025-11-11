@@ -12,7 +12,8 @@ const icsCalendarRepository = new IcsCalendarRepository(JSON.parse(config));
 icsCalendarRepository
   .get()
   .then((events) => {
-    console.log(JSON.stringify(serialize(events)));
+    const skipEventsTitle = 'Migration du calendrier LTH';
+    console.log(JSON.stringify(serialize(events.filter((event) => event.title.get() !== skipEventsTitle))));
     return process.exit(0);
   })
   .catch((error) => {
