@@ -1,6 +1,6 @@
 import { Calendar } from '../domain/Calendar';
 import { CalendarRepository } from '../domain/CalendarRepository';
-import { serialize } from '../primary/JsonCalendar';
+import { deserialize, serialize } from '../primary/JsonCalendar';
 
 import { toCalendarEvents } from './IcsCalendarEvent';
 import { parse } from './IcsParser';
@@ -63,10 +63,20 @@ export class IcsCalendarRepository implements CalendarRepository {
       const lth = loadGoogleLyonTechHub()
       return groups.concat(lth)
     }
+    const loadAllEvents = async () => {
+      return Promise.allSettled(await loadAllIcs()).then((list) =>
+        list.flatMap(dropAndLogRejected<Calendar>).flatMap(c => c),
+      )
+    }
+    const loadOldEvents = async () => {
+      const response = await this.fetchToText(this.config.oldEvents)
+      return deserialize(JSON.parse(response));
+    }
 
-    return Promise.allSettled(await loadAllIcs()).then((list) =>
-      list.flatMap(dropAndLogRejected<Calendar>).flatMap(c => c),
-    );
+    const oldEvents = await loadOldEvents();
+    return loadAllEvents().then(newEvents => {
+      return newEvents.concat(oldEvents)
+    });
   }
 
   async export(): Promise<string> {
