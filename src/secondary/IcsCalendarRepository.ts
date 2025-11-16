@@ -10,7 +10,7 @@ const icalToCalendarEvent = (group: string, text: string): Calendar => {
   return calendarEvents.flatMap(toCalendarEvents(group));
 };
 
-const fetchToText = (url: string): Promise<string> =>
+const defaultFetchToText = (url: string): Promise<string> =>
   fetch(url)
     .then(async (response) => await response.text())
     .catch((e) => {
@@ -25,21 +25,36 @@ const dropAndLogRejected = (result: PromiseSettledResult<string[]>) => {
   return [result.value];
 };
 
-type FetchToText = typeof fetchToText
+export type Config = {
+  lyonTechHub: string
+  groups: string
+  oldEvents: string
+}
+interface GroupConfig {
+  tag: string
+  url: string
+}
+
+type FetchToText = typeof defaultFetchToText
 export class IcsCalendarRepository implements CalendarRepository {
   private readonly fetchToText: FetchToText
 
-  constructor(private readonly icsList: Record<string, string>, _fetchToText?: FetchToText) {
-    this.fetchToText = _fetchToText || fetchToText
+  constructor(private readonly config: Config, _fetchToText?: FetchToText) {
+    this.fetchToText = _fetchToText || defaultFetchToText
   }
 
   async get(): Promise<Calendar> {
-    const loadAllGroups = (icsList: Record<string, string>) =>
-      Object.entries(icsList).map(([group, ics]) =>
-        this.fetchToText(ics).then(result => [group, result])
+    const getAllGroups = async () => {
+      const response = await this.fetchToText(this.config.groups)
+      return JSON.parse(response) as GroupConfig[]
+    }
+
+    const loadAllGroups = (icsList: GroupConfig[]) =>
+      icsList.map(group =>
+        this.fetchToText(group.url).then(result => [group.tag, result])
       )
 
-    return Promise.allSettled(loadAllGroups(this.icsList)).then((list) =>
+    return Promise.allSettled(loadAllGroups(await getAllGroups())).then((list) =>
       list.flatMap(dropAndLogRejected).flatMap(([group, text]) => icalToCalendarEvent(group, text)),
     );
   }

@@ -29,7 +29,7 @@ jobs:
           npm run lint
           npm run format
           mkdir -p dist
-          npx tsx src/update.ts "$(cat calendars.json)" > dist/calendar.json
+          npx tsx src/update.ts "$(cat config.json)" > dist/calendar.json
           npx tsx src/export.ts "dist/calendar.json" > dist/calendar.ics
 
   build:
@@ -50,7 +50,7 @@ jobs:
           npm run lint
           npm run format
           mkdir -p dist
-          npx tsx src/update.ts "$(cat calendars.json)" > dist/calendar.json
+          npx tsx src/update.ts "$(cat config.json)" > dist/calendar.json
           npx tsx src/export.ts "dist/calendar.json" > dist/calendar.ics
       - name: Setup Pages
         id: pages

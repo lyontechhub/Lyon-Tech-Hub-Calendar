@@ -6,9 +6,14 @@ import { CalendarEvent, CalendarEventBuilder } from '../domain/CalendarEvent';
 import { Name } from '../domain/Name';
 import { serialize, deserialize } from '../primary/JsonCalendar';
 
-import { IcsCalendarRepository } from './IcsCalendarRepository';
+import { Config, IcsCalendarRepository } from './IcsCalendarRepository';
 
 const defaultIcs: string = readFileSync(__dirname + '/samples/repositoryTest.ics', 'utf8')
+const config: Config = {
+  lyonTechHub: 'https://example.com/lth',
+  groups: 'https://example.com/groups',
+  oldEvents: 'https://example.com/old',
+}
 
 describe('IcsCalendarEvent', () => {
   const now = new Date('2025-10-15T10:11:12Z')
@@ -19,10 +24,11 @@ describe('IcsCalendarEvent', () => {
 
   describe('get should', () => {
     it('return all events of all groups', async () => {
-      const repository = new IcsCalendarRepository({
-        groupA: 'https://example.com/group_a',
-        groupB: 'https://example.com/group_b',
-      }, url => {
+      const repository = new IcsCalendarRepository(config, url => {
+        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
+          { tag: 'groupA', url: 'https://example.com/group_a' },
+          { tag: 'groupB', url: 'https://example.com/group_b' },
+        ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
         if(url == 'https://example.com/group_b') return Promise.resolve(defaultIcs.replace('event_306666704', 'event_9999'))
 
@@ -87,9 +93,10 @@ describe('IcsCalendarEvent', () => {
 
   describe('export should', () => {
     it('return json stringify of all events', async () => {
-      const repository = new IcsCalendarRepository({
-        groupA: 'https://example.com/group_a',
-      }, url => {
+      const repository = new IcsCalendarRepository(config, url => {
+        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
+          { tag: 'groupA', url: 'https://example.com/group_a' },
+        ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
 
         throw `Invalid url ${url}`
@@ -102,9 +109,10 @@ describe('IcsCalendarEvent', () => {
     })
 
     it('exclude migration event', async () => {
-      const repository = new IcsCalendarRepository({
-        groupA: 'https://example.com/group_a',
-      }, url => {
+      const repository = new IcsCalendarRepository(config, url => {
+        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
+          { tag: 'groupA', url: 'https://example.com/group_a' },
+        ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
 
         throw `Invalid url ${url}`
