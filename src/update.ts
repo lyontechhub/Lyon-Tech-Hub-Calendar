@@ -1,4 +1,3 @@
-import { serialize } from './primary/JsonCalendar';
 import { IcsCalendarRepository } from './secondary/IcsCalendarRepository';
 
 const config = process.argv.at(2);
@@ -10,10 +9,9 @@ if (config === undefined) {
 
 const icsCalendarRepository = new IcsCalendarRepository(JSON.parse(config));
 icsCalendarRepository
-  .get()
-  .then((events) => {
-    const skipEventsTitle = 'Migration du calendrier LTH';
-    console.log(JSON.stringify(serialize(events.filter((event) => event.title.get !== skipEventsTitle))));
+  .export()
+  .then((str) => {
+    console.log(str);
     return process.exit(0);
   })
   .catch((error) => {

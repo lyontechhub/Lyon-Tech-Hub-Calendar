@@ -1,5 +1,7 @@
 import { Calendar } from '../domain/Calendar';
+import { CalendarEvent } from '../domain/CalendarEvent';
 import { CalendarRepository } from '../domain/CalendarRepository';
+import { deserialize, serialize } from '../primary/JsonCalendar';
 
 import { toCalendarEvents } from './IcsCalendarEvent';
 import { parse } from './IcsParser';
@@ -9,27 +11,82 @@ const icalToCalendarEvent = (group: string, text: string): Calendar => {
   return calendarEvents.flatMap(toCalendarEvents(group));
 };
 
-const fetchToGroupText = ([group, ics]: [string, string]) =>
-  fetch(ics)
-    .then(async (response) => [group, await response.text()] satisfies [string, string])
+const defaultFetchToText = (url: string): Promise<string> =>
+  fetch(url)
+    .then(async (response) => await response.text())
     .catch((e) => {
-      throw new Error(`Impossible to fetch ${ics}`, { cause: e });
+      throw new Error(`Impossible to fetch ${url}`, { cause: e });
     });
 
-const dropAndLogRejected = (result: PromiseSettledResult<string[]>) => {
+function dropAndLogRejected<T>(result: PromiseSettledResult<T>): T[] {
   if (result.status === 'rejected') {
     console.error(result.reason);
     return [];
   }
   return [result.value];
-};
+}
 
+function extractStartDate(evt: CalendarEvent): Date {
+  return evt.date.start instanceof Date ? evt.date.start : new Date(evt.date.start.year, evt.date.start.month - 1, evt.date.start.day);
+}
+
+export type Config = {
+  googleLyonTechHub: string;
+  groups: string;
+  oldEvents: string;
+};
+interface GroupConfig {
+  tag: string;
+  url: string;
+}
+
+type FetchToText = typeof defaultFetchToText;
 export class IcsCalendarRepository implements CalendarRepository {
-  constructor(private readonly icsList: Record<string, string>) {}
+  private readonly fetchToText: FetchToText;
+
+  constructor(
+    private readonly config: Config,
+    _fetchToText?: FetchToText,
+  ) {
+    this.fetchToText = _fetchToText || defaultFetchToText;
+  }
 
   async get(): Promise<Calendar> {
-    return Promise.allSettled(Object.entries(this.icsList).map(fetchToGroupText)).then((list) =>
-      list.flatMap(dropAndLogRejected).flatMap(([group, text]) => icalToCalendarEvent(group, text)),
-    );
+    const getAllGroups = async () => {
+      const response = await this.fetchToText(this.config.groups);
+      return JSON.parse(response) as GroupConfig[];
+    };
+    const loadAllGroups = (icsList: GroupConfig[]) =>
+      icsList.map((group) => this.fetchToText(group.url).then((result) => icalToCalendarEvent(group.tag, result)));
+    const loadGoogleLyonTechHub = async () => {
+      const response = await this.fetchToText(this.config.googleLyonTechHub);
+      const skipEventsTitle = 'Migration du calendrier LTH';
+      return icalToCalendarEvent('LyonTechHub', response).filter((event) => !event.fullTitle.get.includes(skipEventsTitle));
+    };
+    const loadAllIcs = async () => {
+      const groups = loadAllGroups(await getAllGroups());
+      const lth = loadGoogleLyonTechHub();
+      return groups.concat(lth);
+    };
+    const loadAllEvents = async () => {
+      return Promise.allSettled(await loadAllIcs()).then((list) => list.flatMap(dropAndLogRejected<Calendar>).flatMap((c) => c));
+    };
+    const loadOldEvents = async (now: Date) => {
+      const response = await this.fetchToText(this.config.oldEvents);
+      return deserialize(JSON.parse(response)).filter((evt) => extractStartDate(evt) <= now);
+    };
+
+    const now = new Date();
+    const oldEvents = await loadOldEvents(now);
+    return loadAllEvents().then((newEvents) => {
+      const newEventIds = new Set(newEvents.map((e) => e.id));
+      return newEvents.concat(oldEvents.filter((old) => !newEventIds.has(old.id)));
+    });
+  }
+
+  async export(): Promise<string> {
+    const events = await this.get();
+    const eventsDto = serialize(events);
+    return JSON.stringify(eventsDto, null, ' ');
   }
 }
