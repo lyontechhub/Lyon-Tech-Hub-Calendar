@@ -8,7 +8,9 @@
     "outDir": "./dist",
     "strict": true,
     "sourceMap": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
