@@ -114,6 +114,26 @@ describe('IcsCalendarEvent', () => {
       ]
       expect(serialize(result)).toEqual(serialize(expected.map(CalendarEvent.of)));
     })
+
+    it('exclude migration event of google', async () => {
+      const repository = new IcsCalendarRepository(config, url => {
+        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
+          { tag: 'groupA', url: 'https://example.com/group_a' },
+        ]))
+        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
+        if(url == 'https://example.com/lth') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
+
+        throw `Invalid url ${url}`
+      })
+
+      const events = await repository.get()
+
+      expect(events.map(e => e.id)).toEqual([
+        "groupA-event_306666704@meetup.com",
+        "groupA-event_306104038@meetup.com",
+        "LyonTechHub-event_306666704@meetup.com",
+      ]);
+    })
   })
 
   describe('export should', () => {
@@ -132,27 +152,6 @@ describe('IcsCalendarEvent', () => {
       const result = await repository.export()
 
       expect(deserialize(JSON.parse(result))).toEqual(events);
-    })
-
-    it('exclude migration event of google', async () => {
-      const repository = new IcsCalendarRepository(config, url => {
-        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
-          { tag: 'groupA', url: 'https://example.com/group_a' },
-        ]))
-        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
-        if(url == 'https://example.com/lth') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
-
-        throw `Invalid url ${url}`
-      })
-
-      const result = await repository.export()
-
-      const events = deserialize(JSON.parse(result))
-      expect(events.map(e => e.id)).toEqual([
-        "groupA-event_306666704@meetup.com",
-        "groupA-event_306104038@meetup.com",
-        "LyonTechHub-event_306666704@meetup.com",
-      ]);
     })
   })
 })
