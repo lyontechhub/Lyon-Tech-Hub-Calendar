@@ -4,6 +4,7 @@ import { deserialize, serialize } from '../primary/JsonCalendar';
 
 import { toCalendarEvents } from './IcsCalendarEvent';
 import { parse } from './IcsParser';
+import { CalendarEvent } from '../domain/CalendarEvent';
 
 const icalToCalendarEvent = (group: string, text: string): Calendar => {
   const calendarEvents = parse(text, new Date());
@@ -23,6 +24,10 @@ function dropAndLogRejected<T>(result: PromiseSettledResult<T>): T[]{
     return [];
   }
   return [result.value];
+}
+
+function extractStartDate(evt: CalendarEvent): Date {
+  return evt.date.start instanceof Date ? evt.date.start : new Date(evt.date.start.year, evt.date.start.month-1, evt.date.start.day)
 }
 
 export type Config = {
@@ -68,12 +73,13 @@ export class IcsCalendarRepository implements CalendarRepository {
         list.flatMap(dropAndLogRejected<Calendar>).flatMap(c => c),
       )
     }
-    const loadOldEvents = async () => {
+    const loadOldEvents = async (now: Date) => {
       const response = await this.fetchToText(this.config.oldEvents)
-      return deserialize(JSON.parse(response));
+      return deserialize(JSON.parse(response)).filter(evt => extractStartDate(evt) <= now);
     }
 
-    const oldEvents = await loadOldEvents();
+    const now = new Date();
+    const oldEvents = await loadOldEvents(now);
     return loadAllEvents().then(newEvents => {
       return newEvents.concat(oldEvents)
     });

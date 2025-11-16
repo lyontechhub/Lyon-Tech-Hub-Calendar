@@ -140,8 +140,8 @@ describe('IcsCalendarEvent', () => {
     it('append old events', async () => {
       const oldEvents: CalendarEventBuilder[] = [
         {
-          createdAt: now,
-          updatedAt: now,
+          createdAt: new Date('2024-03-20T01:00:00.000Z'),
+          updatedAt: new Date('2024-03-20T02:00:00.000Z'),
           date: {
             end: new Date('2024-03-20T20:30:00.000Z'),
             start: new Date('2024-03-20T17:30:00.000Z'),
@@ -203,6 +203,94 @@ describe('IcsCalendarEvent', () => {
         ...oldEvents,
       ]
       expect(serialize(events)).toEqual(serialize(expected.map(CalendarEvent.of)));
+    })
+
+    it('ignore old events in the futur', async () => {
+      const now = new Date('2025-02-15T10:11:12Z')
+      vi.setSystemTime(now)
+      const defaultOldEvents: CalendarEventBuilder = {
+        createdAt: new Date('2024-03-20T01:00:00.000Z'),
+        updatedAt: new Date('2024-03-20T02:00:00.000Z'),
+        date: {
+          start: new Date('2025-02-15T10:11:12Z'),
+          end: new Date('2025-03-21T20:30:00.000Z'),
+        },
+        group: Name.of('groupC'),
+        id: "groupC-event_old2",
+        title: Name.of('Event B'),
+      };
+      const oldEvents: CalendarEventBuilder[] = [
+        { ...defaultOldEvents,
+          date: {
+            start: new Date('2024-03-20T17:30:00.000Z'),
+            end: new Date('2024-03-20T20:30:00.000Z'),
+          },
+          id: "groupA-event_old1",
+        },
+        { ...defaultOldEvents,
+          date: {
+            start: new Date('2025-02-15T10:11:12Z'),
+            end: new Date('2024-03-20T20:30:00.000Z'),
+          },
+          id: "groupA-event_old2",
+        },
+        { ...defaultOldEvents,
+          date: {
+            start: new Date('2025-02-15T20:11:12Z'),
+            end: new Date('2024-03-20T20:30:00.000Z'),
+          },
+          id: "groupA-event_old3",
+        },
+        { ...defaultOldEvents,
+          date: {
+            start: new Date('2025-02-16T10:11:12Z'),
+            end: new Date('2024-03-20T20:30:00.000Z'),
+          },
+          id: "groupA-event_old4",
+        },
+        { ...defaultOldEvents,
+          date: {
+            start: { year: 2024, month: 3, day: 20 },
+            end: { year: 2024, month: 3, day: 20 },
+          },
+          id: "groupA-event_old5",
+        },
+        { ...defaultOldEvents,
+          date: {
+            start: { year: 2025, month: 2, day: 15 },
+            end: { year: 2024, month: 3, day: 20 },
+          },
+          id: "groupA-event_old6",
+        },
+        { ...defaultOldEvents,
+          date: {
+            start: { year: 2025, month: 2, day: 16 },
+            end: { year: 2024, month: 3, day: 20 },
+          },
+          id: "groupA-event_old7",
+        },
+      ]
+      const repository = new IcsCalendarRepository(config, url => {
+        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
+          { tag: 'groupA', url: 'https://example.com/group_a' },
+        ]))
+        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
+        if(url == 'https://example.com/lth') return Promise.resolve('')
+        if(url == 'https://example.com/old') return Promise.resolve(JSON.stringify(serialize(oldEvents.map(CalendarEvent.of))))
+
+        throw `Invalid url ${url}`
+      })
+
+      const events = await repository.get()
+
+      expect(events.map(e => e.id)).toEqual([
+        "groupA-event_306666704@meetup.com",
+        "groupA-event_306104038@meetup.com",
+        "groupA-event_old1",
+        "groupA-event_old2",
+        "groupA-event_old5",
+        "groupA-event_old6",
+      ]);
     })
   })
 
