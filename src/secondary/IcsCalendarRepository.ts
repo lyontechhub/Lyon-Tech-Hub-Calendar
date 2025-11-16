@@ -45,6 +45,6 @@ export class IcsCalendarRepository implements CalendarRepository {
     const skipEventsTitle = 'Migration du calendrier LTH';
     const exportedEvents = events.filter(event => !event.fullTitle.get.includes(skipEventsTitle))
     const eventsDto = serialize(exportedEvents)
-    return JSON.stringify(eventsDto)
+    return JSON.stringify(eventsDto, null, ' ')
   }
 }
