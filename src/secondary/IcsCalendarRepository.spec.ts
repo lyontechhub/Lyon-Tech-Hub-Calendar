@@ -292,6 +292,55 @@ describe('IcsCalendarEvent', () => {
         "groupA-event_old6",
       ]);
     })
+
+    it('avoid duplicate with old events', async () => {
+      const now = new Date('2025-05-19T18:00:00.000Z')
+      vi.setSystemTime(now)
+      const oldEvents: CalendarEventBuilder[] = [
+        {
+          createdAt: now,
+          updatedAt: now,
+          date: {
+            end: new Date('2025-03-19T20:00:00.000Z'),
+            start: new Date('2025-03-19T18:00:00.000Z'),
+          },
+          group: Name.of('groupA'),
+          id: "groupA-event_306666704@meetup.com",
+          title: Name.of('Event B'),
+          description: '',
+        },
+        {
+          createdAt: now,
+          updatedAt: now,
+          date: {
+            end: new Date('2025-03-20T20:30:00.000Z'),
+            start: new Date('2025-03-20T17:30:00.000Z'),
+          },
+          group: Name.of('groupA'),
+          id: "groupA-event_other@meetup.com",
+          title: Name.of('Event A'),
+          description: '',
+        },
+      ]
+      const repository = new IcsCalendarRepository(config, url => {
+        if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
+          { tag: 'groupA', url: 'https://example.com/group_a' },
+        ]))
+        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
+        if(url == 'https://example.com/lth') return Promise.resolve('')
+        if(url == 'https://example.com/old') return Promise.resolve(JSON.stringify(serialize(oldEvents.map(CalendarEvent.of))))
+
+        throw `Invalid url ${url}`
+      })
+
+      const events = await repository.get()
+
+      expect(events.map(e => e.id)).toEqual([
+        "groupA-event_306666704@meetup.com",
+        "groupA-event_306104038@meetup.com",
+        "groupA-event_other@meetup.com",
+      ]);
+    })
   })
 
   describe('export should', () => {

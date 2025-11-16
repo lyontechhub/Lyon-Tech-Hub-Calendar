@@ -81,7 +81,8 @@ export class IcsCalendarRepository implements CalendarRepository {
     const now = new Date();
     const oldEvents = await loadOldEvents(now);
     return loadAllEvents().then(newEvents => {
-      return newEvents.concat(oldEvents)
+      const newEventIds = new Set(newEvents.map(e => e.id))
+      return newEvents.concat(oldEvents.filter(old => !newEventIds.has(old.id)))
     });
   }
 
