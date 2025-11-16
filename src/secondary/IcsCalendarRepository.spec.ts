@@ -10,7 +10,7 @@ import { Config, IcsCalendarRepository } from './IcsCalendarRepository';
 
 const defaultIcs: string = readFileSync(__dirname + '/samples/repositoryTest.ics', 'utf8')
 const config: Config = {
-  lyonTechHub: 'https://example.com/lth',
+  googleLyonTechHub: 'https://example.com/lth',
   groups: 'https://example.com/groups',
   oldEvents: 'https://example.com/old',
 }
@@ -31,6 +31,7 @@ describe('IcsCalendarEvent', () => {
         ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
         if(url == 'https://example.com/group_b') return Promise.resolve(defaultIcs.replace('event_306666704', 'event_9999'))
+        if(url == 'https://example.com/lth') return Promise.resolve(defaultIcs.replace('event_306666704', 'event_666'))
 
         throw `Invalid url ${url}`
       })
@@ -86,6 +87,30 @@ describe('IcsCalendarEvent', () => {
           title: Name.of('Event A'),
           description: '',
         },
+        {
+          createdAt: now,
+          updatedAt: now,
+          date: {
+            end: new Date('2025-03-19T20:00:00.000Z'),
+            start: new Date('2025-03-19T18:00:00.000Z'),
+          },
+          group: Name.of('LyonTechHub'),
+          id: "LyonTechHub-event_666@meetup.com",
+          title: Name.of('Event B'),
+          description: '',
+        },
+        {
+          createdAt: now,
+          updatedAt: now,
+          date: {
+            end: new Date('2025-03-20T20:30:00.000Z'),
+            start: new Date('2025-03-20T17:30:00.000Z'),
+          },
+          group: Name.of('LyonTechHub'),
+          id: "LyonTechHub-event_306104038@meetup.com",
+          title: Name.of('Event A'),
+          description: '',
+        },
       ]
       expect(serialize(result)).toEqual(serialize(expected.map(CalendarEvent.of)));
     })
@@ -98,6 +123,7 @@ describe('IcsCalendarEvent', () => {
           { tag: 'groupA', url: 'https://example.com/group_a' },
         ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
+        if(url == 'https://example.com/lth') return Promise.resolve('')
 
         throw `Invalid url ${url}`
       })
@@ -114,6 +140,7 @@ describe('IcsCalendarEvent', () => {
           { tag: 'groupA', url: 'https://example.com/group_a' },
         ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
+        if(url == 'https://example.com/lth') return Promise.resolve('')
 
         throw `Invalid url ${url}`
       })

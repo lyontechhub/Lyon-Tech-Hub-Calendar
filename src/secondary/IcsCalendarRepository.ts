@@ -26,7 +26,7 @@ const dropAndLogRejected = (result: PromiseSettledResult<string[]>) => {
 };
 
 export type Config = {
-  lyonTechHub: string
+  googleLyonTechHub: string
   groups: string
   oldEvents: string
 }
@@ -48,13 +48,21 @@ export class IcsCalendarRepository implements CalendarRepository {
       const response = await this.fetchToText(this.config.groups)
       return JSON.parse(response) as GroupConfig[]
     }
-
     const loadAllGroups = (icsList: GroupConfig[]) =>
       icsList.map(group =>
         this.fetchToText(group.url).then(result => [group.tag, result])
       )
+    const loadGoogleLyonTechHub = async () => {
+      const response = await this.fetchToText(this.config.googleLyonTechHub)
+      return ['LyonTechHub', response]
+    }
+    const loadAllIcs = async () => {
+      const groups = loadAllGroups(await getAllGroups());
+      const lth = loadGoogleLyonTechHub()
+      return groups.concat(lth)
+    }
 
-    return Promise.allSettled(loadAllGroups(await getAllGroups())).then((list) =>
+    return Promise.allSettled(await loadAllIcs()).then((list) =>
       list.flatMap(dropAndLogRejected).flatMap(([group, text]) => icalToCalendarEvent(group, text)),
     );
   }
