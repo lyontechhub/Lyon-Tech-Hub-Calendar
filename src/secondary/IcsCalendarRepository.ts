@@ -10,11 +10,11 @@ const icalToCalendarEvent = (group: string, text: string): Calendar => {
   return calendarEvents.flatMap(toCalendarEvents(group));
 };
 
-const fetchToGroupText = ([group, ics]: [string, string]): Promise<[string, string]> =>
-  fetch(ics)
-    .then(async (response) => [group, await response.text()] satisfies [string, string])
+const fetchToText = (url: string): Promise<string> =>
+  fetch(url)
+    .then(async (response) => await response.text())
     .catch((e) => {
-      throw new Error(`Impossible to fetch ${ics}`, { cause: e });
+      throw new Error(`Impossible to fetch ${url}`, { cause: e });
     });
 
 const dropAndLogRejected = (result: PromiseSettledResult<string[]>) => {
@@ -25,16 +25,21 @@ const dropAndLogRejected = (result: PromiseSettledResult<string[]>) => {
   return [result.value];
 };
 
-type FetchToGroupText = typeof fetchToGroupText
+type FetchToText = typeof fetchToText
 export class IcsCalendarRepository implements CalendarRepository {
-  private readonly fetchToGroupText: FetchToGroupText
+  private readonly fetchToText: FetchToText
 
-  constructor(private readonly icsList: Record<string, string>, _fetchToGroupText?: FetchToGroupText) {
-    this.fetchToGroupText = _fetchToGroupText || fetchToGroupText
+  constructor(private readonly icsList: Record<string, string>, _fetchToText?: FetchToText) {
+    this.fetchToText = _fetchToText || fetchToText
   }
 
   async get(): Promise<Calendar> {
-    return Promise.allSettled(Object.entries(this.icsList).map(this.fetchToGroupText)).then((list) =>
+    const loadAllGroups = (icsList: Record<string, string>) =>
+      Object.entries(icsList).map(([group, ics]) =>
+        this.fetchToText(ics).then(result => [group, result])
+      )
+
+    return Promise.allSettled(loadAllGroups(this.icsList)).then((list) =>
       list.flatMap(dropAndLogRejected).flatMap(([group, text]) => icalToCalendarEvent(group, text)),
     );
   }

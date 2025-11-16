@@ -22,9 +22,9 @@ describe('IcsCalendarEvent', () => {
       const repository = new IcsCalendarRepository({
         groupA: 'https://example.com/group_a',
         groupB: 'https://example.com/group_b',
-      }, ([group, url]) => {
-        if(url == 'https://example.com/group_a') return Promise.resolve([group, defaultIcs])
-        if(url == 'https://example.com/group_b') return Promise.resolve([group, defaultIcs.replace('event_306666704', 'event_9999')])
+      }, url => {
+        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
+        if(url == 'https://example.com/group_b') return Promise.resolve(defaultIcs.replace('event_306666704', 'event_9999'))
 
         throw `Invalid url ${url}`
       })
@@ -89,8 +89,8 @@ describe('IcsCalendarEvent', () => {
     it('return json stringify of all events', async () => {
       const repository = new IcsCalendarRepository({
         groupA: 'https://example.com/group_a',
-      }, ([group, url]) => {
-        if(url == 'https://example.com/group_a') return Promise.resolve([group, defaultIcs])
+      }, url => {
+        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs)
 
         throw `Invalid url ${url}`
       })
@@ -104,8 +104,8 @@ describe('IcsCalendarEvent', () => {
     it('exclude migration event', async () => {
       const repository = new IcsCalendarRepository({
         groupA: 'https://example.com/group_a',
-      }, ([group, url]) => {
-        if(url == 'https://example.com/group_a') return Promise.resolve([group, defaultIcs.replace('Event A', 'Migration du calendrier LTH')])
+      }, url => {
+        if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
 
         throw `Invalid url ${url}`
       })
