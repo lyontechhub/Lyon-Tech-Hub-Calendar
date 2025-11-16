@@ -13,7 +13,10 @@ icsCalendarRepository
   .get()
   .then((events) => {
     const skipEventsTitle = 'Migration du calendrier LTH';
-    console.log(JSON.stringify(serialize(events.filter((event) => event.title.get !== skipEventsTitle))));
+    const exportedEvents = events.filter(event => !event.fullTitle.get.includes(skipEventsTitle))
+    const eventsDto = serialize(exportedEvents)
+    const printedEvents = JSON.stringify(eventsDto)
+    console.log(printedEvents);
     return process.exit(0);
   })
   .catch((error) => {
