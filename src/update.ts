@@ -8,8 +8,9 @@ if (config === undefined) {
 }
 
 const icsCalendarRepository = new IcsCalendarRepository(JSON.parse(config));
-icsCalendarRepository.export()
-  .then(str => {
+icsCalendarRepository
+  .export()
+  .then((str) => {
     console.log(str);
     return process.exit(0);
   })
