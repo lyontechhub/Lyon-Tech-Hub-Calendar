@@ -134,13 +134,13 @@ describe('IcsCalendarEvent', () => {
       expect(deserialize(JSON.parse(result))).toEqual(events);
     })
 
-    it('exclude migration event', async () => {
+    it('exclude migration event of google', async () => {
       const repository = new IcsCalendarRepository(config, url => {
         if(url == 'https://example.com/groups') return Promise.resolve(JSON.stringify([
           { tag: 'groupA', url: 'https://example.com/group_a' },
         ]))
         if(url == 'https://example.com/group_a') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
-        if(url == 'https://example.com/lth') return Promise.resolve('')
+        if(url == 'https://example.com/lth') return Promise.resolve(defaultIcs.replace('Event A', 'Migration du calendrier LTH'))
 
         throw `Invalid url ${url}`
       })
@@ -148,7 +148,11 @@ describe('IcsCalendarEvent', () => {
       const result = await repository.export()
 
       const events = deserialize(JSON.parse(result))
-      expect(events).has.length(1);
+      expect(events.map(e => e.id)).toEqual([
+        "groupA-event_306666704@meetup.com",
+        "groupA-event_306104038@meetup.com",
+        "LyonTechHub-event_306666704@meetup.com",
+      ]);
     })
   })
 })

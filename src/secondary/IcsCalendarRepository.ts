@@ -17,13 +17,13 @@ const defaultFetchToText = (url: string): Promise<string> =>
       throw new Error(`Impossible to fetch ${url}`, { cause: e });
     });
 
-const dropAndLogRejected = (result: PromiseSettledResult<string[]>) => {
+function dropAndLogRejected<T>(result: PromiseSettledResult<T>): T[]{
   if (result.status === 'rejected') {
     console.error(result.reason);
     return [];
   }
   return [result.value];
-};
+}
 
 export type Config = {
   googleLyonTechHub: string
@@ -50,11 +50,13 @@ export class IcsCalendarRepository implements CalendarRepository {
     }
     const loadAllGroups = (icsList: GroupConfig[]) =>
       icsList.map(group =>
-        this.fetchToText(group.url).then(result => [group.tag, result])
+        this.fetchToText(group.url).then(result => icalToCalendarEvent(group.tag, result))
       )
     const loadGoogleLyonTechHub = async () => {
       const response = await this.fetchToText(this.config.googleLyonTechHub)
-      return ['LyonTechHub', response]
+      const skipEventsTitle = 'Migration du calendrier LTH';
+      return icalToCalendarEvent('LyonTechHub', response)
+        .filter(event => !event.fullTitle.get.includes(skipEventsTitle))
     }
     const loadAllIcs = async () => {
       const groups = loadAllGroups(await getAllGroups());
@@ -63,16 +65,13 @@ export class IcsCalendarRepository implements CalendarRepository {
     }
 
     return Promise.allSettled(await loadAllIcs()).then((list) =>
-      list.flatMap(dropAndLogRejected).flatMap(([group, text]) => icalToCalendarEvent(group, text)),
+      list.flatMap(dropAndLogRejected<Calendar>).flatMap(c => c),
     );
   }
 
   async export(): Promise<string> {
     const events = await this.get()
-
-    const skipEventsTitle = 'Migration du calendrier LTH';
-    const exportedEvents = events.filter(event => !event.fullTitle.get.includes(skipEventsTitle))
-    const eventsDto = serialize(exportedEvents)
+    const eventsDto = serialize(events)
     return JSON.stringify(eventsDto, null, ' ')
   }
 }
