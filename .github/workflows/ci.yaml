@@ -77,3 +77,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Notify Cronitor
+        if: github.event_name == 'schedule'
+        run: curl "https://cronitor.link/p/${{ secrets.CRONITOR_TOKEN }}/device-heartbeat?msg=Success"
