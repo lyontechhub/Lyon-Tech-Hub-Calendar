@@ -134,6 +134,39 @@ END:VEVENT`;
     ]);
   });
 
+  it('support description in object (ALTREP parameter)', () => {
+    const content = `
+BEGIN:VEVENT
+UID:LyonCafeViePrivee-1399179c-b7d6-4881-86da-4a01047cb795
+DTSTART;TZID=Europe/Paris:20251121T190000
+DTEND;TZID=Europe/Paris:20251121T210000
+DTSTAMP:20250315T195506Z
+SUMMARY:Flash-party campus du Libre 2026
+DESCRIPTION;ALTREP="data:text/html,Lien%20d'inscription%20%C3%A0%20venir":Lien d'inscription à venir
+STATUS:CONFIRMED
+END:VEVENT`;
+
+    const calendarEvent = parse(content, now);
+
+    expect((calendarEvent[0] as SingleEvent).data.description).toBe("Lien d'inscription à venir");
+  });
+
+  it('support location in object (ALTREP parameter)', () => {
+    const content = `
+BEGIN:VEVENT
+UID:location-object@example.org
+DTSTART;TZID=Europe/Paris:20251121T190000
+DTEND;TZID=Europe/Paris:20251121T210000
+DTSTAMP:20250315T195506Z
+SUMMARY:Flash-party campus du Libre 2026
+LOCATION;ALTREP="data:text/html,I-Factory":I-Factory Villeurbanne la Doua
+END:VEVENT`;
+
+    const calendarEvent = parse(content, now);
+
+    expect((calendarEvent[0] as SingleEvent).data.location).toBe('I-Factory Villeurbanne la Doua');
+  });
+
   it('support recurrent event', () => {
     const content = `
 BEGIN:VEVENT

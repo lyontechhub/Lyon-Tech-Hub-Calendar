@@ -37,6 +37,15 @@ function tryToExtractUrl(event: VEvent): string | null {
   throw new Error(`Invalid url for event ${event.uid} => ${event.url}`);
 }
 
+function extractText(value: unknown): string | null {
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'string') return value;
+  if (value instanceof Object && 'val' in value && typeof (value as { val: unknown }).val === 'string') {
+    return value.val as string;
+  }
+  return null;
+}
+
 function tryToExtractGeo(event: VEvent): Geo | null {
   const geo = event.geo;
   if (geo === null || geo === undefined) return null;
@@ -48,9 +57,9 @@ function tryToExtractGeo(event: VEvent): Geo | null {
 function extractEventData(event: ical.VEvent): EventData {
   return {
     title: event.summary,
-    description: event.description || '',
+    description: extractText(event.description) ?? '',
     url: tryToExtractUrl(event),
-    location: event.location || null,
+    location: extractText(event.location),
     geo: tryToExtractGeo(event),
   };
 }
